@@ -1,0 +1,166 @@
+/* ==========================================================================
+   tvQuran.com Mobile & Responsive Stylesheet
+   ========================================================================== */
+
+/* Mobile Bottom Navigation Bar (Visible on mobile/tablet) */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: var(--player-height);
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-glass);
+  z-index: 980;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 0.5rem;
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  transition: all var(--transition-fast);
+}
+
+.mobile-nav-item i {
+  font-size: 1.15rem;
+}
+
+.mobile-nav-item.active {
+  color: var(--accent-emerald);
+}
+
+/* Tablet & Mobile Media Queries */
+@media (max-width: 1024px) {
+  .hero-banner {
+    grid-template-columns: 1fr;
+    padding: 2.25rem 1.75rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .player-inner-content {
+    grid-template-columns: 1fr 1.5fr;
+  }
+
+  .player-extra-right {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --player-height: 76px;
+    --header-height: 64px;
+  }
+
+  body {
+    padding-bottom: calc(var(--player-height) + 60px);
+  }
+
+  .mobile-bottom-nav {
+    display: flex;
+  }
+
+  .app-header {
+    padding: 0 1rem;
+  }
+
+  .header-nav {
+    display: none;
+  }
+
+  .app-main {
+    padding: 1.25rem 1rem;
+  }
+
+  .hero-banner {
+    padding: 1.75rem 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .hero-content h2 {
+    font-size: 1.65rem;
+  }
+
+  .hero-content p {
+    font-size: 0.9rem;
+  }
+
+  .ayah-arabic-text {
+    font-size: 1.2rem;
+  }
+
+  .reciters-grid, .surahs-grid, .tracks-grid, .live-streams-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* Player Mobile Optimization */
+  .player-inner-content {
+    grid-template-columns: 1fr auto;
+    gap: 0.8rem;
+  }
+
+  .player-canvas-visualizer {
+    display: none;
+  }
+
+  .player-controls-center .controls-buttons-row {
+    gap: 0.6rem;
+  }
+
+  .control-btn.btn-repeat, .control-btn.btn-shuffle, .time-row {
+    display: none;
+  }
+
+  .fullscreen-player-modal {
+    padding: 1.5rem;
+  }
+
+  .fullscreen-album-cover {
+    width: 170px;
+    height: 170px;
+  }
+
+  .fullscreen-surah-calligraphy {
+    font-size: 1.85rem;
+  }
+
+  .mushaf-reader-container {
+    padding: 1.25rem 1rem;
+  }
+
+  .verse-arabic-text {
+    font-size: 1.35rem;
+    line-height: 2.1;
+  }
+
+  .dialog-box {
+    padding: 1.5rem 1.25rem;
+  }
+}

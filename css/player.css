@@ -1,0 +1,419 @@
+/* ==========================================================================
+   tvQuran.com Persistent Audio Player & Fullscreen Audio Engine Styles
+   ========================================================================== */
+
+/* Bottom Persistent Audio Bar */
+.app-player-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--player-height);
+  background: var(--bg-glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid var(--border-glass);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.45);
+  z-index: 990;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  transition: transform var(--transition-normal);
+}
+
+/* Scrubber Progress Bar at top of player bar */
+.player-scrubber-container {
+  position: absolute;
+  top: -6px;
+  left: 0;
+  right: 0;
+  height: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+.player-progress-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: height var(--transition-fast);
+}
+
+.player-scrubber-container:hover .player-progress-bg {
+  height: 6px;
+}
+
+.player-progress-buffered {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+.player-progress-fill {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-emerald) 0%, var(--accent-gold) 100%);
+  pointer-events: none;
+}
+
+.player-progress-thumb {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 10px var(--accent-emerald-glow);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform var(--transition-fast);
+  pointer-events: none;
+}
+
+.player-scrubber-container:hover .player-progress-thumb {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Main 3-Column Player Layout */
+.player-inner-content {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1.2fr 2fr 1.2fr;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Left: Track Meta */
+.player-track-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.player-thumb-wrapper {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-glass);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+  background: var(--bg-tertiary);
+}
+
+.player-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.playing-wave-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.app-player-bar.is-playing .playing-wave-overlay {
+  display: flex;
+}
+
+.wave-bar {
+  width: 3px;
+  height: 14px;
+  background: var(--accent-emerald-light);
+  border-radius: 2px;
+  animation: waveAnim 1s ease-in-out infinite alternate;
+}
+.wave-bar:nth-child(1) { animation-delay: 0.1s; height: 10px; }
+.wave-bar:nth-child(2) { animation-delay: 0.3s; height: 18px; }
+.wave-bar:nth-child(3) { animation-delay: 0.2s; height: 12px; }
+
+@keyframes waveAnim {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1.2); }
+}
+
+.player-text-details {
+  min-width: 0;
+}
+
+.player-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.player-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-fav-btn {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  margin-inline-start: 0.5rem;
+}
+
+.player-fav-btn:hover, .player-fav-btn.active {
+  color: #ef4444;
+  transform: scale(1.15);
+}
+
+/* Center: Controls & Timers */
+.player-controls-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.controls-buttons-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.control-btn {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.control-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.control-btn.active {
+  color: var(--accent-emerald);
+}
+
+.btn-play-main {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-emerald-dark) 100%);
+  color: #ffffff;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 16px var(--accent-emerald-glow);
+  transition: transform var(--transition-fast);
+}
+
+.btn-play-main:hover {
+  transform: scale(1.08);
+}
+
+.time-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+/* Waveform Canvas Overlay in player */
+.player-canvas-visualizer {
+  height: 24px;
+  width: 140px;
+  opacity: 0.7;
+}
+
+/* Right: Volume & Extra Utilities */
+.player-extra-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.85rem;
+}
+
+.speed-badge-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-glass);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.speed-badge-btn:hover {
+  border-color: var(--accent-emerald);
+  color: var(--text-primary);
+}
+
+.volume-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 85px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-emerald);
+  box-shadow: 0 0 6px var(--accent-emerald-glow);
+  cursor: pointer;
+}
+
+/* Fullscreen Immersive Audio View Modal */
+.fullscreen-player-modal {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, #112922 0%, #060a10 85%);
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  padding: 2.5rem 3rem;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.fullscreen-player-modal.active {
+  display: flex;
+}
+
+.fullscreen-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fullscreen-top-bar h4 {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.fullscreen-center-art {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.fullscreen-album-cover {
+  width: 240px;
+  height: 240px;
+  border-radius: 28px;
+  object-fit: cover;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 40px var(--accent-emerald-glow);
+  border: 2px solid var(--border-glass-hover);
+}
+
+.fullscreen-surah-calligraphy {
+  font-family: var(--font-quran);
+  font-size: 2.5rem;
+  color: var(--accent-gold);
+  text-shadow: 0 0 20px var(--accent-gold-glow);
+}
+
+.fullscreen-reciter-name {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.fullscreen-waveform-box {
+  width: 100%;
+  max-width: 650px;
+  height: 60px;
+}
+
+.fullscreen-waveform-box canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.fullscreen-bottom-controls {
+  max-width: 650px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Speed Dropdown Menu */
+.speed-dropdown {
+  position: relative;
+}
+
+.speed-menu-popover {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem;
+  display: none;
+  flex-direction: column;
+  gap: 0.2rem;
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+}
+
+.speed-menu-popover.active {
+  display: flex;
+}
+
+.speed-option-btn {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  border-radius: 4px;
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+
+.speed-option-btn:hover, .speed-option-btn.active {
+  background: var(--accent-emerald);
+  color: #ffffff;
+}

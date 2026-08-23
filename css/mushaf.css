@@ -1,0 +1,189 @@
+/* ==========================================================================
+   tvQuran.com Interactive Digital Mushaf & Quran Reader Styles
+   ========================================================================== */
+
+.mushaf-reader-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.mushaf-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-glass);
+  padding-bottom: 1.25rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.mushaf-surah-selector-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.mushaf-select {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-glass);
+  color: var(--text-primary);
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.mushaf-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mushaf-surah-header-ornament {
+  text-align: center;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.ornament-frame {
+  display: inline-block;
+  border: 2px solid var(--accent-gold);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 3rem;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(16, 185, 129, 0.08) 100%);
+  box-shadow: 0 0 20px var(--accent-gold-glow);
+}
+
+.ornament-surah-name {
+  font-family: var(--font-quran);
+  font-size: 2rem;
+  color: var(--accent-gold-light);
+}
+
+.bismillah-text {
+  font-family: var(--font-quran);
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  text-align: center;
+  margin: 1.5rem 0 2.5rem;
+  line-height: 2.2;
+}
+
+/* Verses List / Continuous Reading Layout */
+.mushaf-verses-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.verse-block {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1.8rem;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.verse-block:hover {
+  border-color: var(--accent-emerald);
+  background: var(--bg-card-hover);
+}
+
+.verse-block.active-playing {
+  border-color: var(--accent-gold);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(245, 158, 11, 0.08));
+  box-shadow: 0 0 25px var(--accent-emerald-glow);
+}
+
+.verse-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.verse-number-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.verse-arabic-text {
+  font-family: var(--font-quran);
+  font-size: 1.75rem;
+  line-height: 2.4;
+  color: #ffffff;
+  text-align: right;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+}
+
+body[dir="ltr"] .verse-arabic-text {
+  text-align: right;
+}
+
+.verse-translation-text {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  border-top: 1px dashed var(--border-glass);
+  padding-top: 0.85rem;
+}
+
+.verse-tafsir-drawer {
+  margin-top: 1rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  font-size: 0.88rem;
+  color: var(--accent-emerald-light);
+  line-height: 1.8;
+  display: none;
+}
+
+.verse-tafsir-drawer.active {
+  display: block;
+}
+
+.verse-actions-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.verse-action-btn {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-glass);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all var(--transition-fast);
+}
+
+.verse-action-btn:hover {
+  color: var(--accent-emerald);
+  border-color: var(--accent-emerald);
+}

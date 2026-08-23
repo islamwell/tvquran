@@ -1,0 +1,16 @@
+{
+  "name": "tvQuran - Holy Quran Audio & Recitations",
+  "short_name": "tvQuran",
+  "description": "Listen to and download high-quality Holy Quran recitations from hundreds of world-renowned reciters, Quran radio, and digital Mushaf.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0F17",
+  "theme_color": "#059669",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tvQuran | استماع وتحميل القرآن الكريم كاملاً بجودة عالية</title>
+  <meta name="description" content="موقع تي في قرآن - بوابتك العصرية للاستماع وتحميل القرآن الكريم كاملاً بأصوات مشاهير القراء، تلاوات خاشعة، رقية شرعية، أذكار، إذاعات القرآن الكريم، ومصحف إلكتروني تفاعلي.">
+  <meta name="keywords" content="قرآن كريم, تلاوات خاشعة, مشاري العفاسي, عبد الباسط, ماهر المعيقلي, مصحف, إذاعة القرآن, رقية شرعية, tvquran">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#059669">
+
+  <!-- Google Fonts: Arabic & Latin Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Readex+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/player.css">
+  <link rel="stylesheet" href="css/mushaf.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Subtle Islamic Glowing Background Accents -->
+  <div class="bg-mesh-decor"></div>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-brand" onclick="window.tvquranApp.switchView('home')">
+      <img src="favicon.svg" alt="tvQuran Logo" class="brand-logo-icon">
+      <div class="brand-text">
+        <h1>tvQuran</h1>
+        <span data-i18n="app_title">القرآن الكريم صوت وتلاوة</span>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="header-nav">
+      <button class="nav-tab-btn active" data-view-target="home">
+        <i class="fa fa-home"></i> <span data-i18n="nav_home">الرئيسية</span>
+      </button>
+      <button class="nav-tab-btn" data-view-target="reciters">
+        <i class="fa fa-microphone"></i> <span data-i18n="nav_reciters">القراء</span>
+      </button>
+      <button class="nav-tab-btn" data-view-target="surahs">
+        <i class="fa fa-book"></i> <span data-i18n="nav_surahs">المصحف والسور</span>
+      </button>
+      <button class="nav-tab-btn" data-view-target="collections">
+        <i class="fa fa-star"></i> <span data-i18n="nav_collections">المختارات</span>
+      </button>
+      <button class="nav-tab-btn" data-view-target="live">
+        <i class="fa fa-podcast"></i> <span data-i18n="nav_live">البث المباشر</span>
+      </button>
+      <button class="nav-tab-btn" data-view-target="favorites">
+        <i class="fa fa-heart"></i> <span data-i18n="nav_favorites">المفضلة</span>
+      </button>
+    </nav>
+
+    <!-- Header Action Controls -->
+    <div class="header-actions">
+      <div class="quick-search-bar" id="searchTriggerBtn">
+        <i class="fa fa-search"></i>
+        <span data-i18n="quick_search">بحث سريع...</span>
+        <span class="search-kbd">⌘K</span>
+      </div>
+
+      <!-- Theme Switcher Button -->
+      <button class="action-icon-btn" onclick="window.tvquranApp.cycleTheme()" title="تغيير المظهر / Change Theme">
+        <i class="fa fa-moon-o" id="themeIcon"></i>
+      </button>
+
+      <!-- Language Switcher Button -->
+      <button class="action-icon-btn" onclick="window.tvquranApp.toggleLanguage()" title="Language / اللغة" style="width:auto; padding:0 0.8rem; border-radius: var(--radius-full); font-size:0.85rem; font-weight:700;">
+        <span id="langBtnText">English</span>
+      </button>
+
+      <!-- Support Us Button -->
+      <button class="btn-support-pill" data-open-support>
+        <i class="fa fa-heart"></i> <span data-i18n="support_us">ادعم الموقع ❤️</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Dynamic Application Container -->
+  <main class="app-main">
+
+    <!-- =========================================================================
+         VIEW 1: HOME (الرئيسية)
+         ========================================================================= -->
+    <section id="view-home" class="view-section active">
+      
+      <!-- Hero Banner -->
+      <div class="hero-banner">
+        <div class="hero-content">
+          <h2 data-i18n="hero_title">استمع إلى كلام الله بأعذب الأصوات</h2>
+          <p data-i18n="hero_subtitle">
+            تلاوات قرآنية خاشعة ومصاحف كاملة بأصوات نخبة من كبار قراء العالم الإسلامي بأعلى نقاوة وجودة صوتية.
+          </p>
+          <div class="hero-actions">
+            <button class="btn-primary" onclick="window.tvquranPlayer.playSurah('alafasy', 1)">
+              <i class="fa fa-play"></i> <span data-i18n="listen_now">استمع الآن</span>
+            </button>
+            <button class="btn-secondary" onclick="window.tvquranApp.switchView('surahs')">
+              <i class="fa fa-book"></i> <span data-i18n="read_mushaf">تصفح المصحف</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Daily Ayah Card -->
+        <div class="hero-daily-ayah">
+          <div class="daily-badge">
+            <i class="fa fa-sun-o"></i> <span data-i18n="daily_ayah_title">آية اليوم المباركة</span>
+          </div>
+          <p class="ayah-arabic-text">
+            ﴿ الَّذِينَ آمَنُوا وَتَطْمَئِنُّ قُلُوبُهُم بِذِكْرِ اللَّهِ ۗ أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ ﴾
+          </p>
+          <div class="ayah-reference">
+            <span>سورة الرعد [الآية: 28] • Surah Ar-Ra'd [13:28]</span>
+            <button class="ayah-play-btn" onclick="window.tvquranPlayer.playSurah('ghamdi', 13)" title="استمع للسورة">
+              <i class="fa fa-play"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Category Navigation Pills -->
+      <div class="category-filter-pills">
+        <button class="pill-btn active" onclick="window.tvquranApp.switchView('reciters')">
+          <i class="fa fa-microphone"></i> <span data-i18n="nav_reciters">جميع القراء</span>
+        </button>
+        <button class="pill-btn" onclick="window.tvquranApp.switchView('surahs')">
+          <i class="fa fa-list-ol"></i> <span data-i18n="all_surahs_title">فهرس السور</span>
+        </button>
+        <button class="pill-btn" onclick="window.tvquranApp.switchView('collections'); window.tvquranApp.renderCollectionsGrid('beautiful');">
+          <i class="fa fa-heart"></i> <span data-i18n="cat_beautiful">تلاوات خاشعة</span>
+        </button>
+        <button class="pill-btn" onclick="window.tvquranApp.switchView('collections'); window.tvquranApp.renderCollectionsGrid('ruqyah');">
+          <i class="fa fa-shield"></i> <span data-i18n="cat_ruqyah">الرقية الشرعية</span>
+        </button>
+        <button class="pill-btn" onclick="window.tvquranApp.switchView('collections'); window.tvquranApp.renderCollectionsGrid('dhikr');">
+          <i class="fa fa-sun-o"></i> <span data-i18n="cat_dhikr">الأذكار اليومية</span>
+        </button>
+        <button class="pill-btn" onclick="window.tvquranApp.switchView('live')">
+          <i class="fa fa-podcast"></i> <span data-i18n="nav_live">البث المباشر</span>
+        </button>
+      </div>
+
+      <!-- Section: Trending Reciters -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-icon"><i class="fa fa-microphone"></i></div>
+          <h3 data-i18n="trending_reciters">مشاهير القراء</h3>
+        </div>
+        <a class="section-more-link" onclick="window.tvquranApp.switchView('reciters')">
+          <span data-i18n="browse_all">عرض الكل</span> <i class="fa fa-angle-left"></i>
+        </a>
+      </div>
+      <div class="reciters-grid" id="homeTrendingReciters"></div>
+
+      <!-- Section: Popular Emotional Recitations -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-icon"><i class="fa fa-heart"></i></div>
+          <h3 data-i18n="popular_recitations">تلاوات مختارة وخاشعة</h3>
+        </div>
+        <a class="section-more-link" onclick="window.tvquranApp.switchView('collections')">
+          <span data-i18n="browse_all">عرض الكل</span> <i class="fa fa-angle-left"></i>
+        </a>
+      </div>
+      <div class="tracks-grid" id="homePopularRecitations"></div>
+
+    </section>
+
+    <!-- =========================================================================
+         VIEW 2: RECITERS (القراء)
+         ========================================================================= -->
+    <section id="view-reciters" class="view-section">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-icon"><i class="fa fa-microphone"></i></div>
+          <h3 data-i18n="reciters_catalog">دليل القراء والمصاحف المرتلة</h3>
+        </div>
+      </div>
+
+      <!-- Alphabetical & Riwayah Filters -->
+      <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 2rem; flex-wrap: wrap;">
+        <div class="category-filter-pills" style="margin-bottom: 0;">
+          <button class="pill-btn active" onclick="window.tvquranApp.renderRecitersGrid('all')">الكل (All)</button>
+          <button class="pill-btn" onclick="window.tvquranApp.renderRecitersGrid('A')">A - أ</button>
+          <button class="pill-btn" onclick="window.tvquranApp.renderRecitersGrid('M')">M - م</button>
+          <button class="pill-btn" onclick="window.tvquranApp.renderRecitersGrid('S')">S - س</button>
+          <button class="pill-btn" onclick="window.tvquranApp.renderRecitersGrid('Y')">Y - ي</button>
+          <button class="pill-btn" onclick="window.tvquranApp.renderRecitersGrid('K')">K - خ</button>
+          <button class="pill-btn" onclick="window.tvquranApp.renderRecitersGrid('I')">I - إ</button>
+          <button class="pill-btn" onclick="window.tvquranApp.renderRecitersGrid('H')">H - هـ</button>
+        </div>
+
+        <select class="mushaf-select" onchange="window.tvquranApp.renderRecitersGrid(null, this.value)" style="margin-inline-start: auto;">
+          <option value="all">جميع الروايات (All Riwayaat)</option>
+          <option value="Hafs">حفص عن عاصم (Hafs 'an Asim)</option>
+          <option value="Warsh">ورش عن نافع (Warsh 'an Nafi')</option>
+        </select>
+      </div>
+
+      <div class="reciters-grid" id="recitersCatalogGrid"></div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 3: SURAHS & MUSHAF (المصحف والسور)
+         ========================================================================= -->
+    <section id="view-surahs" class="view-section">
+      
+      <!-- Interactive Digital Mushaf Reader Component -->
+      <div class="mushaf-reader-container" id="mushafReaderContainer">
+        <div class="mushaf-toolbar">
+          <div class="mushaf-surah-selector-wrap">
+            <i class="fa fa-book" style="color: var(--accent-gold); font-size: 1.2rem;"></i>
+            <select class="mushaf-select" id="mushafSurahSelect"></select>
+          </div>
+
+          <div class="mushaf-controls-group">
+            <button class="btn-icon-sm" id="btnMushafFontPlus" title="تكبير الخط"><i class="fa fa-plus"></i></button>
+            <button class="btn-icon-sm" id="btnMushafFontMinus" title="تصغير الخط"><i class="fa fa-minus"></i></button>
+            <button class="btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;" onclick="window.tvquranApp.playSurahWithCurrentReciter(window.tvquranMushaf.currentSurahId)">
+              <i class="fa fa-play"></i> <span data-i18n="listen_now">استمع للسورة</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Surah Heading Ornament -->
+        <div class="mushaf-surah-header-ornament">
+          <div class="ornament-frame">
+            <h2 class="ornament-surah-name" id="mushafOrnamentSurahName">سُورَةُ الفَاتِحَةِ</h2>
+          </div>
+          <div class="bismillah-text">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        </div>
+
+        <!-- Verses List -->
+        <div class="mushaf-verses-wrapper" id="mushafVersesWrapper"></div>
+      </div>
+
+      <!-- Surah Index (114 Surahs) -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-icon"><i class="fa fa-list-ol"></i></div>
+          <h3 data-i18n="all_surahs_title">فهرس سور القرآن الكريم (114 سورة)</h3>
+        </div>
+      </div>
+
+      <!-- Search Input for Surahs -->
+      <div class="search-dialog-input-wrap" style="max-width: 500px; margin-bottom: 2rem;">
+        <i class="fa fa-search" style="color: var(--text-muted);"></i>
+        <input type="text" placeholder="ابحث باسم السورة أو رقمها..." data-i18n-placeholder="quick_search" oninput="window.tvquranApp.renderSurahsGrid(this.value)">
+      </div>
+
+      <div class="surahs-grid" id="allSurahsGrid"></div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 4: COLLECTIONS (المختارات)
+         ========================================================================= -->
+    <section id="view-collections" class="view-section">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-icon"><i class="fa fa-star"></i></div>
+          <h3 data-i18n="collections_title">المختارات القرآنية والتسجيلات النادرة</h3>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="category-filter-pills">
+        <button class="pill-btn active" onclick="document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active')); this.classList.add('active'); window.tvquranApp.renderCollectionsGrid('all');">
+          <i class="fa fa-th-large"></i> <span data-i18n="cat_all">الكل</span>
+        </button>
+        <button class="pill-btn" onclick="document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active')); this.classList.add('active'); window.tvquranApp.renderCollectionsGrid('beautiful');">
+          <i class="fa fa-heart"></i> <span data-i18n="cat_beautiful">تلاوات خاشعة</span>
+        </button>
+        <button class="pill-btn" onclick="document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active')); this.classList.add('active'); window.tvquranApp.renderCollectionsGrid('ruqyah');">
+          <i class="fa fa-shield"></i> <span data-i18n="cat_ruqyah">الرقية الشرعية</span>
+        </button>
+        <button class="pill-btn" onclick="document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active')); this.classList.add('active'); window.tvquranApp.renderCollectionsGrid('dhikr');">
+          <i class="fa fa-sun-o"></i> <span data-i18n="cat_dhikr">الأذكار اليومية</span>
+        </button>
+        <button class="pill-btn" onclick="document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active')); this.classList.add('active'); window.tvquranApp.renderCollectionsGrid('rare');">
+          <i class="fa fa-history"></i> <span data-i18n="cat_rare">تلاوات نادرة</span>
+        </button>
+        <button class="pill-btn" onclick="document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active')); this.classList.add('active'); window.tvquranApp.renderCollectionsGrid('duas');">
+          <i class="fa fa-bell"></i> <span data-i18n="cat_adhan">الأذان والأدعية</span>
+        </button>
+      </div>
+
+      <div class="tracks-grid" id="collectionsTracksGrid"></div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 5: LIVE TV & RADIO (البث المباشر)
+         ========================================================================= -->
+    <section id="view-live" class="view-section">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-icon"><i class="fa fa-podcast"></i></div>
+          <h3 data-i18n="live_radio_title">الإذاعات والبث المباشر من الحرمين</h3>
+        </div>
+      </div>
+      <div class="live-streams-grid" id="liveStreamsGrid"></div>
+    </section>
+
+    <!-- =========================================================================
+         VIEW 6: FAVORITES (المفضلة)
+         ========================================================================= -->
+    <section id="view-favorites" class="view-section">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-icon"><i class="fa fa-heart"></i></div>
+          <h3 data-i18n="favorites_title">قائمتي المفضلة وسجل الاستماع</h3>
+        </div>
+      </div>
+      <div class="tracks-grid" id="favoritesTracksGrid"></div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav">
+    <button class="mobile-nav-item active" data-view-target="home">
+      <i class="fa fa-home"></i> <span data-i18n="nav_home">الرئيسية</span>
+    </button>
+    <button class="mobile-nav-item" data-view-target="reciters">
+      <i class="fa fa-microphone"></i> <span data-i18n="nav_reciters">القراء</span>
+    </button>
+    <button class="mobile-nav-item" data-view-target="surahs">
+      <i class="fa fa-book"></i> <span data-i18n="nav_surahs">المصحف</span>
+    </button>
+    <button class="mobile-nav-item" data-view-target="collections">
+      <i class="fa fa-star"></i> <span data-i18n="nav_collections">المختارات</span>
+    </button>
+    <button class="mobile-nav-item" data-view-target="favorites">
+      <i class="fa fa-heart"></i> <span data-i18n="nav_favorites">المفضلة</span>
+    </button>
+  </nav>
+
+  <!-- =========================================================================
+       PERSISTENT BOTTOM AUDIO PLAYER BAR
+       ========================================================================= -->
+  <footer class="app-player-bar" id="appPlayerBar">
+    <!-- Top Scrubber Bar -->
+    <div class="player-scrubber-container" id="playerScrubber">
+      <div class="player-progress-bg">
+        <div class="player-progress-buffered" id="playerProgressBuffered"></div>
+        <div class="player-progress-fill" id="playerProgressFill"></div>
+      </div>
+      <div class="player-progress-thumb" id="playerProgressThumb"></div>
+    </div>
+
+    <!-- Inner 3-Column Layout -->
+    <div class="player-inner-content">
+      
+      <!-- Left Column: Track Info -->
+      <div class="player-track-meta">
+        <div class="player-thumb-wrapper">
+          <img src="favicon.svg" alt="Track Cover" class="player-thumb-img" id="playerThumb">
+          <div class="playing-wave-overlay">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+          </div>
+        </div>
+        <div class="player-text-details">
+          <div class="player-title" id="playerTitle">سورة الفاتحة</div>
+          <div class="player-subtitle" id="playerSubtitle">مشاري راشد العفاسي</div>
+        </div>
+        <button class="player-fav-btn" id="playerFavBtn" title="إضافة للمفضلة">
+          <i class="fa fa-heart-o"></i>
+        </button>
+      </div>
+
+      <!-- Center Column: Controls & Visualizer -->
+      <div class="player-controls-center">
+        <div class="controls-buttons-row">
+          <button class="control-btn btn-shuffle" id="btnShuffle" title="تشغيل عشوائي">
+            <i class="fa fa-random"></i>
+          </button>
+          <button class="control-btn" id="btnPrev" title="السابق">
+            <i class="fa fa-step-backward"></i>
+          </button>
+          <button class="btn-play-main" id="btnPlayMain" title="تشغيل / إيقاف">
+            <i class="fa fa-play" id="btnPlayIcon"></i>
+          </button>
+          <button class="control-btn" id="btnNext" title="التالي">
+            <i class="fa fa-step-forward"></i>
+          </button>
+          <button class="control-btn btn-repeat active" id="btnRepeat" title="تكرار">
+            <i class="fa fa-repeat"></i>
+          </button>
+        </div>
+
+        <div class="time-row">
+          <span id="playerCurrentTime">00:00</span>
+          <canvas class="player-canvas-visualizer" id="playerCanvas"></canvas>
+          <span id="playerDurationTime">00:00</span>
+        </div>
+      </div>
+
+      <!-- Right Column: Extras & Volume -->
+      <div class="player-extra-right">
+        <!-- Speed Dropdown -->
+        <div class="speed-dropdown">
+          <button class="speed-badge-btn" id="playerSpeedBtn">1.0x</button>
+          <div class="speed-menu-popover" id="speedMenuPopover">
+            <button class="speed-option-btn" data-rate="0.75">0.75x</button>
+            <button class="speed-option-btn active" data-rate="1.0">1.0x</button>
+            <button class="speed-option-btn" data-rate="1.25">1.25x</button>
+            <button class="speed-option-btn" data-rate="1.5">1.5x</button>
+          </div>
+        </div>
+
+        <!-- Sleep Timer Button -->
+        <button class="control-btn" id="playerTimerBtn" title="مؤقت النوم">
+          <i class="fa fa-clock-o"></i>
+        </button>
+
+        <!-- Volume Slider -->
+        <div class="volume-wrapper">
+          <button class="control-btn" id="playerVolumeBtn" style="width:28px;height:28px;">
+            <i class="fa fa-volume-up"></i>
+          </button>
+          <input type="range" class="volume-slider" id="playerVolumeSlider" min="0" max="1" step="0.02" value="0.9">
+        </div>
+
+        <!-- Fullscreen Button -->
+        <button class="control-btn" id="playerFullscreenBtn" title="عرض ملء الشاشة">
+          <i class="fa fa-expand"></i>
+        </button>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       FULLSCREEN IMMERSIVE AUDIO VIEW
+       ========================================================================= -->
+  <div class="fullscreen-player-modal" id="fullscreenPlayerModal">
+    <div class="fullscreen-top-bar">
+      <h4><i class="fa fa-headphones" style="color:var(--accent-emerald);"></i> tvQuran Live Stream Player</h4>
+      <button class="dialog-close-btn" id="fsCloseBtn"><i class="fa fa-times"></i></button>
+    </div>
+
+    <div class="fullscreen-center-art">
+      <img src="favicon.svg" alt="Cover" class="fullscreen-album-cover" id="fsCover">
+      <div class="fullscreen-surah-calligraphy" id="fsSurahName">سورة الفاتحة</div>
+      <div class="fullscreen-reciter-name" id="fsReciterName">مشاري راشد العفاسي</div>
+      
+      <!-- Fullscreen Waveform Canvas -->
+      <div class="fullscreen-waveform-box">
+        <canvas id="fsCanvas"></canvas>
+      </div>
+    </div>
+
+    <div class="fullscreen-bottom-controls">
+      <!-- Fullscreen Scrubber -->
+      <div class="player-scrubber-container" id="fsScrubber" style="position: relative; top: 0; width: 100%;">
+        <div class="player-progress-bg">
+          <div class="player-progress-fill" id="fsProgressFill"></div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--text-muted);">
+        <span id="fsCurrentTime">00:00</span>
+        <span id="fsDurationTime">00:00</span>
+      </div>
+
+      <div style="display:flex; justify-content:center; align-items:center; gap:2rem;">
+        <button class="control-btn" onclick="window.tvquranPlayer.prevTrack()"><i class="fa fa-step-backward fa-lg"></i></button>
+        <button class="btn-play-main" id="fsPlayBtn" style="width:58px;height:58px;font-size:1.5rem;"><i class="fa fa-play" id="fsPlayIcon"></i></button>
+        <button class="control-btn" onclick="window.tvquranPlayer.nextTrack()"><i class="fa fa-step-forward fa-lg"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       APP FOOTER SECTION (With Semantic Versioning)
+       ========================================================================= -->
+  <footer class="app-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>tvQuran.com</h4>
+        <p data-i18n="footer_about">
+          موقع تي في قرآن (tvQuran.com) هو منصة إسلامية رائدة غير ربحية تهدف إلى إيصال القرآن الكريم وتلاواته الخاشعة إلى كل مسلم ومسلمة حول العالم بأحدث التقنيات وأعلى جودة.
+        </p>
+      </div>
+
+      <div class="footer-column">
+        <h5 data-i18n="quick_categories">الأقسام</h5>
+        <ul>
+          <li><a onclick="window.tvquranApp.switchView('reciters')" data-i18n="nav_reciters">دليل القراء</a></li>
+          <li><a onclick="window.tvquranApp.switchView('surahs')" data-i18n="nav_surahs">المصحف والسور</a></li>
+          <li><a onclick="window.tvquranApp.switchView('collections')" data-i18n="nav_collections">تلاوات خاشعة</a></li>
+          <li><a onclick="window.tvquranApp.switchView('live')" data-i18n="nav_live">البث المباشر</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h5 data-i18n="cat_ruqyah">الرقية والأذكار</h5>
+        <ul>
+          <li><a onclick="window.tvquranApp.switchView('collections')" data-i18n="cat_ruqyah">الرقية الشرعية</a></li>
+          <li><a onclick="window.tvquranApp.switchView('collections')" data-i18n="cat_dhikr">أذكار الصباح والمساء</a></li>
+          <li><a onclick="window.tvquranApp.switchView('collections')" data-i18n="cat_rare">تسجيلات تاريخية</a></li>
+          <li><a onclick="window.tvquranApp.switchView('collections')" data-i18n="cat_adhan">أذان الحرمين</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h5 data-i18n="support_us">عن الموقع</h5>
+        <ul>
+          <li><a data-open-support data-i18n="support_us">ادعم استمرار الموقع ❤️</a></li>
+          <li><a onclick="window.tvquranApp.openShareModal({title_ar:'tvQuran.com'})" data-i18n="embed_code">كود التضمين للناشرين</a></li>
+          <li><a href="mailto:contact@tvquran.com" data-i18n="report_issue">اتصل بنا / إبلاغ</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer Bottom Row -->
+    <div class="footer-bottom">
+      <div class="footer-rights" data-i18n="footer_rights">
+        جميع الحقوق محفوظة لموقع تي في قرآن © 2008-2026
+      </div>
+
+      <!-- Version Indicator (Mandatory System Rule) -->
+      <div class="footer-version-badge">
+        <i class="fa fa-code-fork"></i>
+        <span>v1.0.0 (updated 2026-08-24 01:34)</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       MODALS & DIALOGS (<dialog>)
+       ========================================================================= -->
+
+  <!-- 1. Global Search Modal (Ctrl+K) -->
+  <dialog id="searchModal">
+    <div class="dialog-box">
+      <div class="dialog-header">
+        <h3 data-i18n="modal_search_title">البحث الشامل في tvQuran</h3>
+        <button class="dialog-close-btn"><i class="fa fa-times"></i></button>
+      </div>
+      <div class="search-dialog-input-wrap">
+        <i class="fa fa-search"></i>
+        <input type="text" id="globalSearchInput" placeholder="ابحث عن قارئ، سورة، أو تلاوة..." data-i18n-placeholder="search_placeholder">
+      </div>
+      <div class="search-results-list" id="globalSearchResults"></div>
+    </div>
+  </dialog>
+
+  <!-- 2. Reciter Profile Modal -->
+  <dialog id="reciterProfileModal">
+    <div class="dialog-box" style="width: 680px;">
+      <div class="dialog-header">
+        <h3 id="reciterModalName">اسم القارئ</h3>
+        <button class="dialog-close-btn"><i class="fa fa-times"></i></button>
+      </div>
+      <div style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1.5rem;">
+        <img id="reciterModalAvatar" src="favicon.svg" alt="Avatar" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-glass-hover);">
+        <div>
+          <span class="reciter-riwayah" id="reciterModalRiwayah">حفص عن عاصم</span>
+          <p id="reciterModalBio" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.4rem;"></p>
+        </div>
+      </div>
+      <h4 style="font-size: 0.95rem; margin-bottom: 0.8rem; color: var(--accent-emerald);" data-i18n="nav_surahs">سور القرآن الكريم:</h4>
+      <div class="search-results-list" id="reciterModalSurahsList" style="max-height: 300px;"></div>
+    </div>
+  </dialog>
+
+  <!-- 3. Share & Embed Code Modal -->
+  <dialog id="shareModal">
+    <div class="dialog-box">
+      <div class="dialog-header">
+        <h3 data-i18n="modal_share_title">مشاركة التلاوة أو تضمينها</h3>
+        <button class="dialog-close-btn"><i class="fa fa-times"></i></button>
+      </div>
+      <div style="margin-bottom: 1.5rem;">
+        <label style="font-size: 0.82rem; color: var(--text-muted); display: block; margin-bottom: 0.4rem;">رابط الاستماع المباشر (Direct Link):</label>
+        <div style="display: flex; gap: 0.5rem;">
+          <input type="text" id="shareDirectUrlInput" class="mushaf-select" style="flex: 1;" readonly>
+          <button class="btn-primary" onclick="window.tvquranApp.copyInputVal('shareDirectUrlInput')"><i class="fa fa-copy"></i></button>
+        </div>
+      </div>
+      <div>
+        <label style="font-size: 0.82rem; color: var(--text-muted); display: block; margin-bottom: 0.4rem;" data-i18n="embed_code">كود التضمين للمواقع والمدونات (Embed iFrame):</label>
+        <div style="display: flex; gap: 0.5rem;">
+          <textarea id="shareEmbedCodeInput" class="mushaf-select" style="flex: 1; height: 75px; resize: none;" readonly></textarea>
+          <button class="btn-primary" onclick="window.tvquranApp.copyInputVal('shareEmbedCodeInput')"><i class="fa fa-copy"></i></button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 4. Sleep Timer Modal -->
+  <dialog id="sleepTimerModal">
+    <div class="dialog-box" style="max-width: 420px; text-align: center;">
+      <div class="dialog-header">
+        <h3 data-i18n="modal_timer_title">ضبط مؤقت النوم</h3>
+        <button class="dialog-close-btn"><i class="fa fa-times"></i></button>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        سيتم إيقاف التلاوة تلقائياً بعد انقضاء الوقت المحدد للمساعدة على النوم بسكينة.
+      </p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem;">
+        <button class="btn-secondary" onclick="window.tvquranPlayer.setSleepTimer(15); document.getElementById('sleepTimerModal').close();">15 دقيقة (15 min)</button>
+        <button class="btn-secondary" onclick="window.tvquranPlayer.setSleepTimer(30); document.getElementById('sleepTimerModal').close();">30 دقيقة (30 min)</button>
+        <button class="btn-secondary" onclick="window.tvquranPlayer.setSleepTimer(45); document.getElementById('sleepTimerModal').close();">45 دقيقة (45 min)</button>
+        <button class="btn-secondary" onclick="window.tvquranPlayer.setSleepTimer(60); document.getElementById('sleepTimerModal').close();">60 دقيقة (60 min)</button>
+      </div>
+      <button class="pill-btn" style="width: 100%; justify-content: center; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);" onclick="window.tvquranPlayer.setSleepTimer(0); document.getElementById('sleepTimerModal').close();">
+        إلغاء المؤقت (Cancel Timer)
+      </button>
+    </div>
+  </dialog>
+
+  <!-- 5. Support Us Modal -->
+  <dialog id="supportModal">
+    <div class="dialog-box" style="text-align: center;">
+      <div class="dialog-header">
+        <h3 data-i18n="modal_support_title">المساهمة في دعم موقع القرآن الكريم</h3>
+        <button class="dialog-close-btn"><i class="fa fa-times"></i></button>
+      </div>
+      <i class="fa fa-heart" style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;"></i>
+      <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
+        موقع تي في قرآن غير ربحي ويوفر خدماته مجاناً لملايين المسلمين. مساهمتك تدعم خوادم البث وتطوير المنصة ليبقى القرآن الكريم يُتلى ويُستمع إليه على مدار الساعة.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <button class="btn-primary" onclick="alert('جزاكم الله خيراً وكتب أجركم!'); document.getElementById('supportModal').close();">
+          <i class="fa fa-credit-card"></i> المساهمة الآن
+        </button>
+        <button class="btn-secondary" onclick="window.tvquranApp.openShareModal({title_ar:'tvQuran.com'}); document.getElementById('supportModal').close();">
+          <i class="fa fa-share-alt"></i> نشر الموقع
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- JavaScript Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/translations.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/mushaf.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
