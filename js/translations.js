@@ -4,7 +4,7 @@
 
 const TRANSLATIONS = {
   ar: {
-    app_title: "تي في قرآن | الاستماع وتحميل القرآن الكريم",
+    app_title: "tvQuran",
     app_subtitle: "بوابتك العصرية للاستماع إلى تلاوات القرآن الكريم بأصوات مشاهير القراء بجودة عالية",
     
     // Navigation
@@ -45,7 +45,7 @@ const TRANSLATIONS = {
     translation: "الترجمة",
     
     // Headings & Sections
-    hero_title: "استمع إلى كلام الله بأعذب الأصوات",
+    hero_title: "استمع إلى القرآن الكريم بسكينة",
     hero_subtitle: "تلاوات قرآنية خاشعة ومصاحف كاملة بأصوات نخبة من كبار قراء العالم الإسلامي",
     daily_ayah_title: "آية اليوم المباركة",
     trending_reciters: "مشاهير القراء",
@@ -103,7 +103,7 @@ const TRANSLATIONS = {
   },
   
   en: {
-    app_title: "tvQuran | Listen and Download Holy Quran",
+    app_title: "tvQuran",
     app_subtitle: "Your modern gateway to listening and downloading high-quality Quran recitations by world-famous reciters",
     
     // Navigation
@@ -144,7 +144,7 @@ const TRANSLATIONS = {
     translation: "Translation",
     
     // Headings & Sections
-    hero_title: "Listen to the Holy Quran with Pure Tranquility",
+    hero_title: "Listen to the Quran with Tranquility",
     hero_subtitle: "Experience soothing Quran recitations and complete Mushaf audio catalogs by the world's most renowned Qaris.",
     daily_ayah_title: "Verse of the Day",
     trending_reciters: "Featured Reciters",

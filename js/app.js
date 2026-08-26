@@ -9,6 +9,9 @@ class TVQuranApp {
     this.currentReciterId = 'alafasy';
     this.currentView = 'home';
     this.currentCollectionCategory = 'all';
+    this.currentSlideIndex = 0;
+    this.slideDuration = 5500;
+    this.slideInterval = null;
 
     this.player = new TVQuranPlayer();
     this.mushaf = new TVQuranMushaf(this.player);
@@ -26,10 +29,118 @@ class TVQuranApp {
     this.initNavigation();
     this.initModals();
     this.initKeyboardShortcuts();
+    this.initHeroSlider();
     
     // Initial Render
     this.renderAllViews();
     this.mushaf.init();
+  }
+
+  // Hero Slider Carousel (4 Slides with Progress Indicators)
+  initHeroSlider() {
+    const sliderContainer = document.getElementById('heroSliderContainer');
+    const prevBtn = document.getElementById('sliderPrevBtn');
+    const nextBtn = document.getElementById('sliderNextBtn');
+    const segments = document.querySelectorAll('.slider-progress-segment');
+
+    if (!sliderContainer) return;
+
+    // Arrow navigation
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        const isAr = this.currentLanguage === 'ar';
+        // In RTL, prev arrow moves to previous slide
+        this.goToSlide(this.currentSlideIndex - 1);
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        this.goToSlide(this.currentSlideIndex + 1);
+      });
+    }
+
+    // Direct segment click
+    segments.forEach((seg, idx) => {
+      seg.addEventListener('click', () => {
+        this.goToSlide(idx);
+      });
+    });
+
+    // Pause on hover
+    sliderContainer.addEventListener('mouseenter', () => {
+      this.pauseSlideTimer();
+    });
+
+    sliderContainer.addEventListener('mouseleave', () => {
+      this.startSlideTimer();
+    });
+
+    // Touch support (swipe)
+    let touchStartX = 0;
+    sliderContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      this.pauseSlideTimer();
+    }, { passive: true });
+
+    sliderContainer.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diffX = touchEndX - touchStartX;
+      if (Math.abs(diffX) > 45) {
+        if (diffX > 0) {
+          // Swipe Right
+          this.goToSlide(this.currentSlideIndex - 1);
+        } else {
+          // Swipe Left
+          this.goToSlide(this.currentSlideIndex + 1);
+        }
+      }
+      this.startSlideTimer();
+    }, { passive: true });
+
+    this.startSlideTimer();
+  }
+
+  goToSlide(index) {
+    const slides = document.querySelectorAll('.hero-slide');
+    const segments = document.querySelectorAll('.slider-progress-segment');
+    if (slides.length === 0) return;
+
+    // Loop through 0, 1, 2, 3 and return back to 0
+    this.currentSlideIndex = (index + slides.length) % slides.length;
+
+    slides.forEach((slide, idx) => {
+      slide.classList.toggle('active', idx === this.currentSlideIndex);
+    });
+
+    segments.forEach((seg, idx) => {
+      seg.classList.toggle('active', idx === this.currentSlideIndex);
+      seg.classList.toggle('completed', idx < this.currentSlideIndex);
+
+      // Re-trigger animation on active fill bar
+      const fill = seg.querySelector('.slider-progress-fill');
+      if (fill && idx === this.currentSlideIndex) {
+        fill.style.animation = 'none';
+        void fill.offsetWidth; // Trigger reflow
+        fill.style.animation = '';
+      }
+    });
+
+    this.startSlideTimer();
+  }
+
+  startSlideTimer() {
+    this.pauseSlideTimer();
+    this.slideInterval = setInterval(() => {
+      this.goToSlide(this.currentSlideIndex + 1);
+    }, this.slideDuration);
+  }
+
+  pauseSlideTimer() {
+    if (this.slideInterval) {
+      clearInterval(this.slideInterval);
+      this.slideInterval = null;
+    }
   }
 
   // Language & RTL / LTR
