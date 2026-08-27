@@ -10,10 +10,11 @@ const TRANSLATIONS = {
     // Navigation
     nav_home: "الرئيسية",
     nav_reciters: "القراء",
-    nav_surahs: "المصحف والسور",
-    nav_collections: "المختارات والتلاوات",
-    nav_live: "البث المباشر والإذاعات",
+    nav_surahs: "المصحف",
+    nav_collections: "المختارات",
+    nav_live: "البث",
     nav_favorites: "المفضلة",
+    reciter_surahs_heading: "سور القرآن الكريم",
     
     // Actions & Buttons
     search_placeholder: "ابحث عن قارئ، سورة، أو تلاوة... (اضغط Ctrl+K)",
@@ -109,10 +110,11 @@ const TRANSLATIONS = {
     // Navigation
     nav_home: "Home",
     nav_reciters: "Reciters",
-    nav_surahs: "Surahs & Mushaf",
+    nav_surahs: "Mushaf",
     nav_collections: "Collections",
-    nav_live: "Live TV & Radio",
+    nav_live: "Live",
     nav_favorites: "Favorites",
+    reciter_surahs_heading: "Quran Surahs",
     
     // Actions & Buttons
     search_placeholder: "Search for a reciter, surah, or recitation... (Press Ctrl+K)",
