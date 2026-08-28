@@ -16,12 +16,31 @@ class TVQuranPlayer {
     this.sleepTimerSeconds = 0;
     
     // Favorites & History (LocalStorage)
-    this.favorites = JSON.parse(localStorage.getItem('tvquran_favorites') || '[]');
-    this.history = JSON.parse(localStorage.getItem('tvquran_history') || '[]');
+    this.favorites = this.readStoredArray('tvquran_favorites');
+    this.history = this.readStoredArray('tvquran_history');
 
     this.initElements();
     this.initEvents();
     this.initVisualizer();
+  }
+
+  readStoredArray(key) {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || '[]');
+      return Array.isArray(value) ? value : [];
+    } catch (error) {
+      console.warn(`Ignoring invalid localStorage value for ${key}:`, error);
+      return [];
+    }
+  }
+
+  localizedTrackValue(track, field) {
+    if (window.tvquranApp) return window.tvquranApp.content(track, field);
+    return track[`${field}_en`] || track[`${field}_ur`] || track[`${field}_ar`] || '';
+  }
+
+  t(key) {
+    return window.tvquranApp ? window.tvquranApp.t(key) : (window.TRANSLATIONS.en[key] || key);
   }
 
   initElements() {
@@ -188,8 +207,10 @@ class TVQuranPlayer {
     const track = {
       id: `surah-${reciter.id}-${surah.id}`,
       title_ar: `سورة ${surah.name_ar}`,
+      title_ur: `سورۃ ${surah.name_ar}`,
       title_en: `Surah ${surah.name_en}`,
       reciter_ar: reciter.name_ar,
+      reciter_ur: reciter.name_ar,
       reciter_en: reciter.name_en,
       surah_id: surah.id,
       reciter_id: reciter.id,
@@ -201,8 +222,10 @@ class TVQuranPlayer {
     const fullQueue = window.TVQURAN_DATA.surahs.map(s => ({
       id: `surah-${reciter.id}-${s.id}`,
       title_ar: `سورة ${s.name_ar}`,
+      title_ur: `سورۃ ${s.name_ar}`,
       title_en: `Surah ${s.name_en}`,
       reciter_ar: reciter.name_ar,
+      reciter_ur: reciter.name_ar,
       reciter_en: reciter.name_en,
       surah_id: s.id,
       reciter_id: reciter.id,
@@ -332,9 +355,8 @@ class TVQuranPlayer {
   }
 
   updateTrackMetaUI(track) {
-    const isAr = (document.documentElement.lang || 'ar') === 'ar';
-    const title = isAr ? track.title_ar : track.title_en;
-    const reciter = isAr ? track.reciter_ar : track.reciter_en;
+    const title = this.localizedTrackValue(track, 'title');
+    const reciter = this.localizedTrackValue(track, 'reciter');
     
     if (this.titleEl) this.titleEl.textContent = title;
     if (this.subtitleEl) this.subtitleEl.textContent = reciter;
@@ -393,12 +415,12 @@ class TVQuranPlayer {
     if (index > -1) {
       this.favorites.splice(index, 1);
       if (window.tvquranApp && typeof window.tvquranApp.showToast === 'function') {
-        window.tvquranApp.showToast(window.tvquranApp.currentLanguage === 'ar' ? 'تمت الإزالة من المفضلة' : 'Removed from Favorites');
+        window.tvquranApp.showToast(this.t('favorite_removed'));
       }
     } else {
       this.favorites.unshift(track);
       if (window.tvquranApp && typeof window.tvquranApp.showToast === 'function') {
-        window.tvquranApp.showToast(window.tvquranApp.currentLanguage === 'ar' ? 'تمت الإضافة إلى المفضلة ❤️' : 'Added to Favorites ❤️');
+        window.tvquranApp.showToast(this.t('favorite_added'));
       }
     }
     localStorage.setItem('tvquran_favorites', JSON.stringify(this.favorites));
@@ -443,11 +465,10 @@ class TVQuranPlayer {
 
   // MediaSession API
   updateMediaSession(track) {
-    if ('mediaSession' in navigator) {
-      const isAr = (document.documentElement.lang || 'ar') === 'ar';
+    if ('mediaSession' in navigator && 'MediaMetadata' in window) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: isAr ? track.title_ar : track.title_en,
-        artist: isAr ? track.reciter_ar : track.reciter_en,
+        title: this.localizedTrackValue(track, 'title'),
+        artist: this.localizedTrackValue(track, 'reciter'),
         album: 'tvQuran.com',
         artwork: [
           { src: track.cover || '/favicon.svg', sizes: '512x512', type: 'image/png' }

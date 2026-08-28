@@ -50,10 +50,10 @@ class TVQuranMushaf {
 
   populateSurahSelector() {
     if (!this.surahSelect) return;
-    const isAr = (document.documentElement.lang || 'ar') === 'ar';
+    const app = window.tvquranApp;
     this.surahSelect.innerHTML = window.TVQURAN_DATA.surahs.map(s => `
       <option value="${s.id}">
-        ${s.id}. ${isAr ? s.name_ar : s.name_en} (${isAr ? s.type === 'Meccan' ? 'مكية' : 'مدنية' : s.type}) - ${s.verses} ${isAr ? 'آيات' : 'verses'}
+        ${s.id}. ${app.surahName(s)} (${app.surahType(s.type)}) - ${s.verses} ${app.t('verses_count')}
       </option>
     `).join('');
   }
@@ -61,11 +61,11 @@ class TVQuranMushaf {
   renderSurah(surahId) {
     this.currentSurahId = surahId;
     const surahMeta = window.TVQURAN_DATA.surahs.find(s => s.id === surahId) || window.TVQURAN_DATA.surahs[0];
-    const isAr = (document.documentElement.lang || 'ar') === 'ar';
+    const app = window.tvquranApp;
 
     if (this.surahSelect) this.surahSelect.value = surahId;
     if (this.surahOrnamentTitle) {
-      this.surahOrnamentTitle.textContent = isAr ? `سُورَةُ ${surahMeta.name_ar}` : `Surah ${surahMeta.name_en}`;
+      this.surahOrnamentTitle.textContent = `${app.t('surah_prefix')} ${app.surahName(surahMeta)}`;
     }
 
     // Check if we have sample verses data in mushaf_samples
@@ -79,10 +79,10 @@ class TVQuranMushaf {
             <span class="verse-number-pill">${v.ayah}</span>
             <div class="verse-actions-strip">
               <button class="verse-action-btn btn-play-verse" onclick="window.tvquranMushaf.playVerse(${surahId}, ${v.ayah})">
-                <i class="fa fa-play"></i> <span>${isAr ? 'استماع' : 'Play'}</span>
+                <i class="fa fa-play"></i> <span>${app.t('play')}</span>
               </button>
               <button class="verse-action-btn btn-tafsir-toggle" onclick="window.tvquranMushaf.toggleTafsir(${surahId}, ${v.ayah})">
-                <i class="fa fa-book"></i> <span>${isAr ? 'التفسير' : 'Tafsir'}</span>
+                <i class="fa fa-book"></i> <span>${app.t('tafsir')}</span>
               </button>
               <button class="verse-action-btn btn-copy-verse" onclick="window.tvquranMushaf.copyVerse('${v.text_ar}', '${surahMeta.name_ar}', ${v.ayah})">
                 <i class="fa fa-copy"></i>
@@ -92,7 +92,7 @@ class TVQuranMushaf {
           <p class="verse-arabic-text" style="font-size: ${this.fontSize}px;">${v.text_ar}</p>
           <p class="verse-translation-text">${v.text_en}</p>
           <div class="verse-tafsir-drawer" id="tafsir-${surahId}-${v.ayah}">
-            <strong>${isAr ? 'تفسير الآية:' : 'Exegesis (Tafsir):'}</strong>
+            <strong>${app.t('exegesis_heading')}</strong>
             <p>${v.tafsir_ar}</p>
           </div>
         </article>
@@ -105,16 +105,16 @@ class TVQuranMushaf {
             <span class="verse-number-pill">1</span>
             <div class="verse-actions-strip">
               <button class="verse-action-btn" onclick="window.tvquranApp.playSurahWithCurrentReciter(${surahId})">
-                <i class="fa fa-play"></i> <span>${isAr ? 'تشغيل التلاوة الكاملة' : 'Play Full Audio'}</span>
+                <i class="fa fa-play"></i> <span>${app.t('full_audio')}</span>
               </button>
             </div>
           </div>
           <p class="verse-arabic-text" style="font-size: ${this.fontSize}px;">
             بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ <br>
-            ${isAr ? `تتوفر التلاوة الصوتية الكاملة لسورة ${surahMeta.name_ar} بأصوات مشاهير القراء.` : `Full audio recitation for Surah ${surahMeta.name_en} is available.`}
+            ${app.t('full_audio_available')} ${app.t('surah_prefix')} ${app.surahName(surahMeta)}.
           </p>
           <p class="verse-translation-text">
-            ${isAr ? `عدد آيات السورة: ${surahMeta.verses} آية | نوعها: ${surahMeta.type === 'Meccan' ? 'مكية' : 'مدنية'} | الجزء: ${surahMeta.juzz}` : `Total Verses: ${surahMeta.verses} | Revelation: ${surahMeta.type} | Juzz: ${surahMeta.juzz}`}
+            ${app.t('total_verses_label')}: ${surahMeta.verses} | ${app.t('revelation')}: ${app.surahType(surahMeta.type)} | ${app.t('juzz')}: ${surahMeta.juzz}
           </p>
         </div>
       `;
@@ -145,7 +145,7 @@ class TVQuranMushaf {
   copyVerse(text, surahName, ayah) {
     const formatted = `﴿ ${text} ﴾ [سورة ${surahName}: ${ayah}] - عبر موقع tvQuran.com`;
     navigator.clipboard.writeText(formatted).then(() => {
-      alert(document.documentElement.lang === 'ar' ? 'تم نسخ الآية الكريمة بنجاح!' : 'Verse copied to clipboard!');
+      alert(window.tvquranApp.t('copy_verse_success'));
     });
   }
 

@@ -4,7 +4,11 @@
 
 class TVQuranApp {
   constructor() {
-    this.currentLanguage = localStorage.getItem('tvquran_lang') || 'ar';
+    this.supportedLanguages = ['en', 'ur', 'fr', 'no'];
+    const savedLanguage = localStorage.getItem('tvquran_lang');
+    // Migrate visitors who previously selected the retired Arabic interface.
+    this.currentLanguage = savedLanguage === 'ar' ? 'ur' : (savedLanguage || 'en');
+    if (!this.supportedLanguages.includes(this.currentLanguage)) this.currentLanguage = 'en';
     this.currentTheme = localStorage.getItem('tvquran_theme') || 'dark';
     this.currentReciterId = 'alafasy';
     this.currentView = 'home';
@@ -48,7 +52,6 @@ class TVQuranApp {
     // Arrow navigation
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
-        const isAr = this.currentLanguage === 'ar';
         // In RTL, prev arrow moves to previous slide
         this.goToSlide(this.currentSlideIndex - 1);
       });
@@ -145,14 +148,16 @@ class TVQuranApp {
 
   // Language & RTL / LTR
   applyLanguage(lang) {
+    if (!this.supportedLanguages.includes(lang)) lang = 'en';
     this.currentLanguage = lang;
     localStorage.setItem('tvquran_lang', lang);
     document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    const direction = lang === 'ur' ? 'rtl' : 'ltr';
+    document.documentElement.dir = direction;
+    document.body.dir = direction;
 
     // Update translations
-    const dict = window.TRANSLATIONS[lang] || window.TRANSLATIONS.ar;
+    const dict = window.TRANSLATIONS[lang] || window.TRANSLATIONS.en;
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       if (dict[key]) el.textContent = dict[key];
@@ -163,18 +168,56 @@ class TVQuranApp {
       if (dict[key]) el.placeholder = dict[key];
     });
 
-    // Update Language Toggle Button Text
+    // The button announces the next language in the requested loop.
+    const currentIndex = this.supportedLanguages.indexOf(lang);
+    const nextLanguage = this.supportedLanguages[(currentIndex + 1) % this.supportedLanguages.length];
+    const languageNames = { en: 'English', ur: 'اردو', fr: 'Français', no: 'Norsk' };
     const langBtnText = document.getElementById('langBtnText');
     if (langBtnText) {
-      langBtnText.textContent = lang === 'ar' ? 'English' : 'العربية';
+      langBtnText.textContent = languageNames[nextLanguage];
+      const button = langBtnText.closest('button');
+      if (button) button.title = `Switch to ${languageNames[nextLanguage]}`;
     }
 
+    document.title = `NQuran | ${this.t('hero_title')}`;
     this.renderAllViews();
+    if (this.mushaf) {
+      this.mushaf.populateSurahSelector();
+      this.mushaf.renderSurah(this.mushaf.currentSurahId);
+    }
+    if (this.player && this.player.currentTrack) this.player.updateTrackMetaUI(this.player.currentTrack);
   }
 
   toggleLanguage() {
-    const newLang = this.currentLanguage === 'ar' ? 'en' : 'ar';
-    this.applyLanguage(newLang);
+    const currentIndex = this.supportedLanguages.indexOf(this.currentLanguage);
+    this.applyLanguage(this.supportedLanguages[(currentIndex + 1) % this.supportedLanguages.length]);
+  }
+
+  t(key) {
+    const dict = window.TRANSLATIONS[this.currentLanguage] || window.TRANSLATIONS.en;
+    return dict[key] || window.TRANSLATIONS.en[key] || key;
+  }
+
+  content(item, field) {
+    if (!item) return '';
+    if (this.currentLanguage === 'ur' && item[`${field}_ur`]) return item[`${field}_ur`];
+    return item[`${field}_en`] || item[`${field}_ar`] || item[field] || '';
+  }
+
+  surahName(surah) {
+    return this.currentLanguage === 'ur' ? surah.name_ar : surah.name_en;
+  }
+
+  reciterName(reciter) {
+    return this.currentLanguage === 'ur' ? reciter.name_ar : reciter.name_en;
+  }
+
+  reciterRiwayah(reciter) {
+    return this.currentLanguage === 'ur' ? reciter.riwayah_ar : reciter.riwayah_en;
+  }
+
+  surahType(type) {
+    return this.t(type === 'Meccan' ? 'type_meccan' : 'type_medinan');
   }
 
   // Theme Management
@@ -246,23 +289,22 @@ class TVQuranApp {
   renderHomeTrending() {
     const container = document.getElementById('homeTrendingReciters');
     if (!container) return;
-    const isAr = this.currentLanguage === 'ar';
     const topReciters = window.TVQURAN_DATA.reciters.slice(0, 6);
 
     container.innerHTML = topReciters.map(r => `
       <div class="reciter-card" onclick="window.tvquranApp.openReciterProfile('${r.id}')">
         <div class="reciter-card-top">
-          <img src="${r.avatar}" alt="${isAr ? r.name_ar : r.name_en}" class="reciter-avatar" loading="lazy">
+          <img src="${r.avatar}" alt="${this.reciterName(r)}" class="reciter-avatar" loading="lazy">
           <div class="reciter-info">
-            <h4>${isAr ? r.name_ar : r.name_en}</h4>
-            <span class="reciter-riwayah">${isAr ? r.riwayah_ar : r.riwayah_en}</span>
+            <h4>${this.reciterName(r)}</h4>
+            <span class="reciter-riwayah">${this.reciterRiwayah(r)}</span>
           </div>
         </div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem; line-height: 1.5;">
-          ${isAr ? r.bio_ar : r.bio_en}
+          ${this.content(r, 'bio')}
         </p>
         <div class="reciter-stats">
-          <span><i class="fa fa-microphone"></i> ${r.total_recitations} ${isAr ? 'تلاوة' : 'Recitations'}</span>
+          <span><i class="fa fa-microphone"></i> ${r.total_recitations} ${this.t('recitations_count')}</span>
           <span><i class="fa fa-headphones"></i> ${r.total_listens}</span>
         </div>
       </div>
@@ -272,7 +314,6 @@ class TVQuranApp {
   renderHomeEmotional() {
     const container = document.getElementById('homePopularRecitations');
     if (!container) return;
-    const isAr = this.currentLanguage === 'ar';
     const emotionalCollection = window.TVQURAN_DATA.collections[0];
 
     container.innerHTML = emotionalCollection.tracks.map(t => `
@@ -282,17 +323,17 @@ class TVQuranApp {
             <i class="fa fa-play"></i>
           </button>
           <div class="track-details" style="flex:1;">
-            <h4>${isAr ? t.title_ar : t.title_en}</h4>
-            <p class="track-reciter">${isAr ? t.reciter_ar : t.reciter_en}</p>
+            <h4>${this.content(t, 'title')}</h4>
+            <p class="track-reciter">${this.content(t, 'reciter')}</p>
           </div>
         </div>
         <div class="track-footer">
-          <span><i class="fa fa-headphones"></i> ${t.listens} ${isAr ? 'استماع' : 'listens'}</span>
+          <span><i class="fa fa-headphones"></i> ${t.listens} ${this.t('listens')}</span>
           <div class="track-actions-bar">
-            <a href="${t.url}" download class="btn-icon-sm" title="${isAr ? 'تحميل MP3' : 'Download MP3'}">
+            <a href="${t.url}" download class="btn-icon-sm" title="${this.t('download_mp3')}">
               <i class="fa fa-download"></i>
             </a>
-            <button class="btn-icon-sm" onclick='window.tvquranApp.openShareModal(${JSON.stringify(t)})' title="${isAr ? 'مشاركة' : 'Share'}">
+            <button class="btn-icon-sm" onclick='window.tvquranApp.openShareModal(${JSON.stringify(t)})' title="${this.t('share')}">
               <i class="fa fa-share-alt"></i>
             </button>
           </div>
@@ -305,7 +346,6 @@ class TVQuranApp {
   renderRecitersGrid(filterLetter = null, filterRiwayah = null) {
     const container = document.getElementById('recitersCatalogGrid');
     if (!container) return;
-    const isAr = this.currentLanguage === 'ar';
 
     let reciters = window.TVQURAN_DATA.reciters;
     if (filterLetter && filterLetter !== 'all') {
@@ -318,14 +358,14 @@ class TVQuranApp {
     container.innerHTML = reciters.map(r => `
       <div class="reciter-card" onclick="window.tvquranApp.openReciterProfile('${r.id}')">
         <div class="reciter-card-top">
-          <img src="${r.avatar}" alt="${isAr ? r.name_ar : r.name_en}" class="reciter-avatar" loading="lazy">
+          <img src="${r.avatar}" alt="${this.reciterName(r)}" class="reciter-avatar" loading="lazy">
           <div class="reciter-info">
-            <h4>${isAr ? r.name_ar : r.name_en}</h4>
-            <span class="reciter-riwayah">${isAr ? r.riwayah_ar : r.riwayah_en}</span>
+            <h4>${this.reciterName(r)}</h4>
+            <span class="reciter-riwayah">${this.reciterRiwayah(r)}</span>
           </div>
         </div>
         <div class="reciter-stats">
-          <span><i class="fa fa-file-audio-o"></i> ${r.total_recitations} ${isAr ? 'سورة' : 'Surahs'}</span>
+          <span><i class="fa fa-file-audio-o"></i> ${r.total_recitations} ${this.t('surahs')}</span>
           <span><i class="fa fa-play"></i> ${r.total_listens}</span>
         </div>
       </div>
@@ -336,7 +376,6 @@ class TVQuranApp {
   renderSurahsGrid(searchQuery = '') {
     const container = document.getElementById('allSurahsGrid');
     if (!container) return;
-    const isAr = this.currentLanguage === 'ar';
 
     let surahs = window.TVQURAN_DATA.surahs;
     if (searchQuery) {
@@ -354,17 +393,17 @@ class TVQuranApp {
         <div class="surah-left">
           <div class="surah-number-badge">${s.id}</div>
           <div class="surah-title-meta">
-            <h4>${isAr ? s.name_ar : s.name_en}</h4>
-            <p>${s.verses} ${isAr ? 'آيات' : 'verses'} • ${isAr ? s.type === 'Meccan' ? 'مكية' : 'مدنية' : s.type}</p>
+            <h4>${this.surahName(s)}</h4>
+            <p>${s.verses} ${this.t('verses_count')} • ${this.surahType(s.type)}</p>
           </div>
         </div>
         <div class="surah-right">
           <span class="surah-arabic-title">${s.name_ar}</span>
           <div class="surah-actions">
-            <button class="btn-icon-sm" onclick="window.tvquranApp.playSurahWithCurrentReciter(${s.id})" title="${isAr ? 'استماع' : 'Listen'}">
+            <button class="btn-icon-sm" onclick="window.tvquranApp.playSurahWithCurrentReciter(${s.id})" title="${this.t('listen')}">
               <i class="fa fa-play"></i>
             </button>
-            <button class="btn-icon-sm" onclick="window.tvquranApp.openMushafSurah(${s.id})" title="${isAr ? 'قراءة المصحف' : 'Read Mushaf'}">
+            <button class="btn-icon-sm" onclick="window.tvquranApp.openMushafSurah(${s.id})" title="${this.t('read_mushaf')}">
               <i class="fa fa-book"></i>
             </button>
           </div>
@@ -377,7 +416,6 @@ class TVQuranApp {
   renderCollectionsGrid(category = 'all') {
     const container = document.getElementById('collectionsTracksGrid');
     if (!container) return;
-    const isAr = this.currentLanguage === 'ar';
 
     let collections = window.TVQURAN_DATA.collections;
     if (category !== 'all') {
@@ -387,7 +425,7 @@ class TVQuranApp {
     let allTracks = [];
     collections.forEach(col => {
       col.tracks.forEach(tr => {
-        allTracks.push({ ...tr, badge: isAr ? col.badge_ar : col.badge_en, color: col.color });
+        allTracks.push({ ...tr, badge: this.content(col, 'badge'), color: col.color });
       });
     });
 
@@ -398,17 +436,17 @@ class TVQuranApp {
             <i class="fa fa-play"></i>
           </button>
           <div class="track-details" style="flex:1;">
-            <h4>${isAr ? t.title_ar : t.title_en}</h4>
-            <p class="track-reciter">${isAr ? t.reciter_ar : t.reciter_en}</p>
+            <h4>${this.content(t, 'title')}</h4>
+            <p class="track-reciter">${this.content(t, 'reciter')}</p>
           </div>
         </div>
         <div class="track-footer">
           <span style="color: ${t.color || 'var(--accent-gold)'}; font-weight:700;">${t.badge}</span>
           <div class="track-actions-bar">
-            <a href="${t.url}" download class="btn-icon-sm" title="${isAr ? 'تحميل MP3' : 'Download MP3'}">
+            <a href="${t.url}" download class="btn-icon-sm" title="${this.t('download_mp3')}">
               <i class="fa fa-download"></i>
             </a>
-            <button class="btn-icon-sm" onclick='window.tvquranApp.openShareModal(${JSON.stringify(t)})' title="${isAr ? 'مشاركة' : 'Share'}">
+            <button class="btn-icon-sm" onclick='window.tvquranApp.openShareModal(${JSON.stringify(t)})' title="${this.t('share')}">
               <i class="fa fa-share-alt"></i>
             </button>
           </div>
@@ -421,7 +459,6 @@ class TVQuranApp {
   renderUrduLecturesGrid() {
     const container = document.getElementById('urduLecturesGrid');
     if (!container) return;
-    const isAr = this.currentLanguage === 'ar';
     const lectures = window.TVQURAN_DATA.urdu_lectures || [];
 
     container.innerHTML = lectures.map(l => {
@@ -429,7 +466,7 @@ class TVQuranApp {
       return `
       <div class="urdu-lecture-card">
         <div class="urdu-lecture-thumb">
-          <img src="${l.cover}" alt="${isAr ? l.title_ar : l.title_en}" loading="lazy">
+          <img src="${l.cover}" alt="${this.content(l, 'title')}" loading="lazy">
           <span class="urdu-lecture-category">${l.category}</span>
           <div class="urdu-play-overlay" onclick="window.tvquranApp.playUrduLecture('${l.id}')">
             <div class="urdu-play-btn-circle">
@@ -439,11 +476,11 @@ class TVQuranApp {
         </div>
         <div class="urdu-lecture-body">
           <div>
-            <h4>${isAr ? l.title_ar : l.title_en}</h4>
+            <h4>${this.content(l, 'title')}</h4>
             <div class="urdu-lecture-speaker">
-              <i class="fa fa-user-circle-o"></i> <span>${isAr ? l.reciter_ar : l.reciter_en}</span>
+              <i class="fa fa-user-circle-o"></i> <span>${this.content(l, 'reciter')}</span>
             </div>
-            <p class="urdu-lecture-desc">${isAr ? l.description_ar : l.description_en}</p>
+            <p class="urdu-lecture-desc">${this.content(l, 'description')}</p>
           </div>
           <div class="urdu-lecture-footer">
             <div class="urdu-lecture-stats">
@@ -451,12 +488,12 @@ class TVQuranApp {
               <span><i class="fa fa-headphones"></i> ${l.listens}</span>
             </div>
             <div class="urdu-lecture-actions">
-              <button class="btn-icon-sm" onclick="window.tvquranApp.playUrduLecture('${l.id}')" title="${isAr ? 'استماع' : 'Play'}"><i class="fa fa-play"></i></button>
-              <button class="btn-icon-sm ${isFav ? 'active' : ''}" onclick="window.tvquranApp.toggleFavoriteUrdu('${l.id}', event)" title="${isAr ? 'حفظ في المفضلة' : 'Save to Favorites'}">
+              <button class="btn-icon-sm" onclick="window.tvquranApp.playUrduLecture('${l.id}')" title="${this.t('play')}"><i class="fa fa-play"></i></button>
+              <button class="btn-icon-sm ${isFav ? 'active' : ''}" onclick="window.tvquranApp.toggleFavoriteUrdu('${l.id}', event)" title="${this.t('save_favorite')}">
                 <i class="fa ${isFav ? 'fa-heart' : 'fa-heart-o'}" style="${isFav ? 'color: #ef4444;' : ''}"></i>
               </button>
-              <button class="btn-icon-sm" onclick="window.tvquranApp.openShareModalById('${l.id}')" title="${isAr ? 'مشاركة' : 'Share'}"><i class="fa fa-share-alt"></i></button>
-              <a href="${l.url || l.audio_url}" download class="btn-icon-sm" title="${isAr ? 'تحميل' : 'Download'}"><i class="fa fa-download"></i></a>
+              <button class="btn-icon-sm" onclick="window.tvquranApp.openShareModalById('${l.id}')" title="${this.t('share')}"><i class="fa fa-share-alt"></i></button>
+              <a href="${l.url || l.audio_url}" download class="btn-icon-sm" title="${this.t('download')}"><i class="fa fa-download"></i></a>
             </div>
           </div>
         </div>
@@ -492,14 +529,13 @@ class TVQuranApp {
   renderFavoritesView() {
     const container = document.getElementById('favoritesTracksGrid');
     if (!container) return;
-    const isAr = this.currentLanguage === 'ar';
     const favs = this.player.favorites;
 
     if (favs.length === 0) {
       container.innerHTML = `
         <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--text-muted);">
           <i class="fa fa-heart-o" style="font-size: 3rem; margin-bottom: 1rem; color: var(--accent-emerald);"></i>
-          <p style="font-size: 1.1rem;">${isAr ? window.TRANSLATIONS.ar.no_favorites : window.TRANSLATIONS.en.no_favorites}</p>
+          <p style="font-size: 1.1rem;">${this.t('no_favorites')}</p>
         </div>
       `;
       return;
@@ -512,17 +548,17 @@ class TVQuranApp {
             <i class="fa fa-play"></i>
           </button>
           <div class="track-details" style="flex:1;">
-            <h4>${isAr ? t.title_ar : t.title_en}</h4>
-            <p class="track-reciter">${isAr ? t.reciter_ar : t.reciter_en}</p>
+            <h4>${this.content(t, 'title')}</h4>
+            <p class="track-reciter">${this.content(t, 'reciter')}</p>
           </div>
         </div>
         <div class="track-footer">
-          <button class="btn-icon-sm" onclick='window.tvquranPlayer.toggleFavorite(${JSON.stringify(t).replace(/'/g, "&#39;")})' title="${isAr ? 'إزالة من المفضلة' : 'Remove from Favorites'}">
+          <button class="btn-icon-sm" onclick='window.tvquranPlayer.toggleFavorite(${JSON.stringify(t).replace(/'/g, "&#39;")})' title="${this.t('remove_favorite')}">
             <i class="fa fa-heart" style="color:#ef4444;"></i>
           </button>
           <div class="track-actions-bar">
-            <a href="${t.url || t.audio_url}" download class="btn-icon-sm" title="${isAr ? 'تحميل' : 'Download'}"><i class="fa fa-download"></i></a>
-            <button class="btn-icon-sm" onclick='window.tvquranApp.openShareModal(${JSON.stringify(t).replace(/'/g, "&#39;")})' title="${isAr ? 'مشاركة' : 'Share'}"><i class="fa fa-share-alt"></i></button>
+            <a href="${t.url || t.audio_url}" download class="btn-icon-sm" title="${this.t('download')}"><i class="fa fa-download"></i></a>
+            <button class="btn-icon-sm" onclick='window.tvquranApp.openShareModal(${JSON.stringify(t).replace(/'/g, "&#39;")})' title="${this.t('share')}"><i class="fa fa-share-alt"></i></button>
           </div>
         </div>
       </div>
@@ -535,12 +571,13 @@ class TVQuranApp {
   }
 
   playLiveRadio(radio) {
-    const isAr = this.currentLanguage === 'ar';
     const track = {
       id: `live-${radio.id}`,
       title_ar: radio.title_ar,
       title_en: radio.title_en,
-      reciter_ar: isAr ? 'بث مباشر 24/7' : '24/7 Live Stream',
+      title_ur: radio.title_ur,
+      reciter_ur: this.t('live_stream'),
+      reciter_ar: this.t('live_stream'),
       reciter_en: '24/7 Live Broadcast',
       url: radio.stream_url,
       cover: radio.cover
@@ -560,7 +597,6 @@ class TVQuranApp {
     this.currentReciterId = reciterId;
     const reciter = window.TVQURAN_DATA.reciters.find(r => r.id === reciterId);
     if (!reciter) return;
-    const isAr = this.currentLanguage === 'ar';
 
     const modal = document.getElementById('reciterProfileModal');
     const nameEl = document.getElementById('reciterModalName');
@@ -569,10 +605,10 @@ class TVQuranApp {
     const bioEl = document.getElementById('reciterModalBio');
     const surahsListEl = document.getElementById('reciterModalSurahsList');
 
-    if (nameEl) nameEl.textContent = isAr ? reciter.name_ar : reciter.name_en;
-    if (riwayahEl) riwayahEl.textContent = isAr ? reciter.riwayah_ar : reciter.riwayah_en;
+    if (nameEl) nameEl.textContent = this.reciterName(reciter);
+    if (riwayahEl) riwayahEl.textContent = this.reciterRiwayah(reciter);
     if (avatarEl) avatarEl.src = reciter.avatar;
-    if (bioEl) bioEl.textContent = isAr ? reciter.bio_ar : reciter.bio_en;
+    if (bioEl) bioEl.textContent = this.content(reciter, 'bio');
 
     if (surahsListEl) {
       surahsListEl.innerHTML = window.TVQURAN_DATA.surahs.map(s => `
@@ -580,8 +616,8 @@ class TVQuranApp {
           <div style="display:flex;align-items:center;gap:0.75rem;">
             <span class="verse-number-pill" style="width:28px;height:28px;font-size:0.75rem;">${s.id}</span>
             <div>
-              <strong>${isAr ? s.name_ar : s.name_en}</strong>
-              <div style="font-size:0.75rem;color:var(--text-muted);">${s.verses} ${isAr ? 'آيات' : 'verses'} • ${isAr ? s.type === 'Meccan' ? 'مكية' : 'مدنية' : s.type}</div>
+              <strong>${this.surahName(s)}</strong>
+              <div style="font-size:0.75rem;color:var(--text-muted);">${s.verses} ${this.t('verses_count')} • ${this.surahType(s.type)}</div>
             </div>
           </div>
           <button class="btn-icon-sm"><i class="fa fa-play"></i></button>
@@ -620,8 +656,6 @@ class TVQuranApp {
           searchResults.innerHTML = '';
           return;
         }
-        const isAr = this.currentLanguage === 'ar';
-        
         // Search in Surahs
         const matchSurahs = window.TVQURAN_DATA.surahs.filter(s => 
           s.name_ar.includes(q) || s.name_en.toLowerCase().includes(q) || String(s.id) === q
@@ -639,12 +673,12 @@ class TVQuranApp {
 
         let resultsHtml = '';
         if (matchReciters.length > 0) {
-          resultsHtml += `<div style="font-size:0.8rem;font-weight:700;color:var(--accent-emerald);margin:0.5rem 0;">${isAr ? 'القراء' : 'Reciters'}</div>`;
+          resultsHtml += `<div style="font-size:0.8rem;font-weight:700;color:var(--accent-emerald);margin:0.5rem 0;">${this.t('reciters')}</div>`;
           resultsHtml += matchReciters.map(r => `
             <div class="search-item" onclick="window.tvquranApp.openReciterProfile('${r.id}'); document.getElementById('searchModal').close();">
               <div style="display:flex;align-items:center;gap:0.75rem;">
                 <img src="${r.avatar}" style="width:30px;height:30px;border-radius:50%;">
-                <span>${isAr ? r.name_ar : r.name_en}</span>
+                <span>${this.reciterName(r)}</span>
               </div>
               <i class="fa fa-angle-left"></i>
             </div>
@@ -652,27 +686,27 @@ class TVQuranApp {
         }
 
         if (matchSurahs.length > 0) {
-          resultsHtml += `<div style="font-size:0.8rem;font-weight:700;color:var(--accent-gold);margin:0.8rem 0 0.5rem;">${isAr ? 'السور' : 'Surahs'}</div>`;
+          resultsHtml += `<div style="font-size:0.8rem;font-weight:700;color:var(--accent-gold);margin:0.8rem 0 0.5rem;">${this.t('surahs')}</div>`;
           resultsHtml += matchSurahs.map(s => `
             <div class="search-item" onclick="window.tvquranApp.playSurahWithCurrentReciter(${s.id}); document.getElementById('searchModal').close();">
-              <span>${s.id}. ${isAr ? s.name_ar : s.name_en}</span>
+              <span>${s.id}. ${this.surahName(s)}</span>
               <button class="btn-icon-sm"><i class="fa fa-play"></i></button>
             </div>
           `).join('');
         }
 
         if (matchUrdu.length > 0) {
-          resultsHtml += `<div style="font-size:0.8rem;font-weight:700;color:#38bdf8;margin:0.8rem 0 0.5rem;">${isAr ? 'محاضرات الأردية (عفت مقبول)' : 'Urdu Lectures (Iffat Maqbool)'}</div>`;
+          resultsHtml += `<div style="font-size:0.8rem;font-weight:700;color:#38bdf8;margin:0.8rem 0 0.5rem;">${this.t('urdu_lectures')}</div>`;
           resultsHtml += matchUrdu.map(l => `
             <div class="search-item" onclick='window.tvquranPlayer.playTrack(${JSON.stringify(l).replace(/'/g, "&#39;")}); document.getElementById("searchModal").close();'>
-              <span><i class="fa fa-graduation-cap" style="color:var(--accent-gold);margin-left:5px;"></i> ${isAr ? l.title_ar : l.title_en}</span>
+              <span><i class="fa fa-graduation-cap" style="color:var(--accent-gold);margin-left:5px;"></i> ${this.content(l, 'title')}</span>
               <button class="btn-icon-sm"><i class="fa fa-play"></i></button>
             </div>
           `).join('');
         }
 
         if (!matchReciters.length && !matchSurahs.length && !matchUrdu.length) {
-          resultsHtml = `<div style="text-align:center;padding:2rem;color:var(--text-muted);">${isAr ? 'لا توجد نتائج' : 'No results found'}</div>`;
+          resultsHtml = `<div style="text-align:center;padding:2rem;color:var(--text-muted);">${this.t('no_search_results')}</div>`;
         }
 
         searchResults.innerHTML = resultsHtml;
@@ -728,7 +762,7 @@ class TVQuranApp {
     if (input) {
       input.select();
       navigator.clipboard.writeText(input.value).then(() => {
-        alert(this.currentLanguage === 'ar' ? 'تم نسخ الرابط بنجاح!' : 'Copied to clipboard!');
+        alert(this.t('copied_link'));
       });
     }
   }
