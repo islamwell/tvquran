@@ -239,7 +239,7 @@ class TVQuranApp {
     this.renderRecitersGrid();
     this.renderSurahsGrid();
     this.renderCollectionsGrid();
-    this.renderLiveStreamsGrid();
+    this.renderUrduLecturesGrid();
   }
 
   // 1. Home View Renderers
@@ -417,32 +417,44 @@ class TVQuranApp {
     `).join('');
   }
 
-  // 5. Live Streams Grid
-  renderLiveStreamsGrid() {
-    const container = document.getElementById('liveStreamsGrid');
+  // 5. Urdu Lectures Grid (Ustadha Iffat Maqbool - NQ International)
+  renderUrduLecturesGrid() {
+    const container = document.getElementById('urduLecturesGrid');
     if (!container) return;
     const isAr = this.currentLanguage === 'ar';
+    const lectures = window.TVQURAN_DATA.urdu_lectures || [];
 
-    container.innerHTML = window.TVQURAN_DATA.live_streams.map(ls => `
-      <div class="live-stream-card">
-        <div class="live-media-wrapper">
-          ${ls.type === 'video' ? `
-            <iframe src="${ls.embed_url}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          ` : `
-            <img src="${ls.cover}" alt="${isAr ? ls.title_ar : ls.title_en}">
-          `}
-          <span class="live-badge-overlay">
-            <span class="live-badge-dot"></span> ${ls.badge}
-          </span>
+    container.innerHTML = lectures.map(l => `
+      <div class="urdu-lecture-card">
+        <div class="urdu-lecture-thumb">
+          <img src="${l.cover}" alt="${isAr ? l.title_ar : l.title_en}" loading="lazy">
+          <span class="urdu-lecture-category">${l.category}</span>
+          <div class="urdu-play-overlay" onclick='window.tvquranPlayer.playTrack(${JSON.stringify(l).replace(/'/g, "&#39;")})'>
+            <div class="urdu-play-btn-circle">
+              <i class="fa fa-play"></i>
+            </div>
+          </div>
         </div>
-        <div class="live-card-body">
-          <h4>${isAr ? ls.title_ar : ls.title_en}</h4>
-          <p>${isAr ? ls.subtitle_ar : ls.subtitle_en}</p>
-          ${ls.type === 'audio' ? `
-            <button class="btn-primary" style="width: 100%; justify-content: center;" onclick='window.tvquranApp.playLiveRadio(${JSON.stringify(ls)})'>
-              <i class="fa fa-play"></i> <span>${isAr ? 'استماع للبث المباشر' : 'Listen Live'}</span>
-            </button>
-          ` : ''}
+        <div class="urdu-lecture-body">
+          <div>
+            <h4>${isAr ? l.title_ar : l.title_en}</h4>
+            <div class="urdu-lecture-speaker">
+              <i class="fa fa-user-circle-o"></i> <span>${isAr ? l.reciter_ar : l.reciter_en}</span>
+            </div>
+            <p class="urdu-lecture-desc">${isAr ? l.description_ar : l.description_en}</p>
+          </div>
+          <div class="urdu-lecture-footer">
+            <div class="urdu-lecture-stats">
+              <span><i class="fa fa-clock-o"></i> ${l.duration}</span>
+              <span><i class="fa fa-headphones"></i> ${l.listens}</span>
+            </div>
+            <div class="urdu-lecture-actions">
+              <button class="btn-icon-sm" onclick='window.tvquranPlayer.playTrack(${JSON.stringify(l).replace(/'/g, "&#39;")})' title="${isAr ? 'استماع' : 'Play'}"><i class="fa fa-play"></i></button>
+              <button class="btn-icon-sm" onclick='window.tvquranPlayer.toggleFavorite(${JSON.stringify(l).replace(/'/g, "&#39;")})' title="${isAr ? 'حفظ' : 'Save'}"><i class="fa fa-heart-o"></i></button>
+              <button class="btn-icon-sm" onclick='window.tvquranApp.openShareModal(${JSON.stringify(l).replace(/'/g, "&#39;")})' title="${isAr ? 'مشاركة' : 'Share'}"><i class="fa fa-share-alt"></i></button>
+              <a href="${l.audio_url || l.url}" download class="btn-icon-sm" title="${isAr ? 'تحميل' : 'Download'}"><i class="fa fa-download"></i></a>
+            </div>
+          </div>
         </div>
       </div>
     `).join('');
@@ -590,6 +602,11 @@ class TVQuranApp {
           r.name_ar.includes(q) || r.name_en.toLowerCase().includes(q)
         ).slice(0, 4);
 
+        // Search in Urdu Lectures
+        const matchUrdu = (window.TVQURAN_DATA.urdu_lectures || []).filter(l =>
+          l.title_ar.includes(q) || l.title_en.toLowerCase().includes(q) || (l.title_ur && l.title_ur.includes(q))
+        ).slice(0, 4);
+
         let resultsHtml = '';
         if (matchReciters.length > 0) {
           resultsHtml += `<div style="font-size:0.8rem;font-weight:700;color:var(--accent-emerald);margin:0.5rem 0;">${isAr ? 'القراء' : 'Reciters'}</div>`;
@@ -614,7 +631,17 @@ class TVQuranApp {
           `).join('');
         }
 
-        if (!matchReciters.length && !matchSurahs.length) {
+        if (matchUrdu.length > 0) {
+          resultsHtml += `<div style="font-size:0.8rem;font-weight:700;color:#38bdf8;margin:0.8rem 0 0.5rem;">${isAr ? 'محاضرات الأردية (عفت مقبول)' : 'Urdu Lectures (Iffat Maqbool)'}</div>`;
+          resultsHtml += matchUrdu.map(l => `
+            <div class="search-item" onclick='window.tvquranPlayer.playTrack(${JSON.stringify(l).replace(/'/g, "&#39;")}); document.getElementById("searchModal").close();'>
+              <span><i class="fa fa-graduation-cap" style="color:var(--accent-gold);margin-left:5px;"></i> ${isAr ? l.title_ar : l.title_en}</span>
+              <button class="btn-icon-sm"><i class="fa fa-play"></i></button>
+            </div>
+          `).join('');
+        }
+
+        if (!matchReciters.length && !matchSurahs.length && !matchUrdu.length) {
           resultsHtml = `<div style="text-align:center;padding:2rem;color:var(--text-muted);">${isAr ? 'لا توجد نتائج' : 'No results found'}</div>`;
         }
 

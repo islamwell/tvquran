@@ -49,6 +49,11 @@
     padding: 2.25rem 2rem 4.5rem;
   }
 
+  .urdu-speaker-banner {
+    grid-template-columns: 1fr;
+    padding: 2rem 1.75rem;
+  }
+
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
@@ -129,6 +134,21 @@
   .featured-card-thumb {
     width: 70px;
     height: 70px;
+  }
+
+  .urdu-speaker-banner {
+    padding: 1.5rem 1.25rem;
+    margin-bottom: 1.75rem;
+    gap: 1.5rem;
+  }
+
+  .urdu-speaker-info h2 {
+    font-size: 1.45rem;
+  }
+
+  .urdu-lectures-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .hero-content p {

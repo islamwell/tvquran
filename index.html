@@ -32,18 +32,15 @@
   <!-- App Header -->
   <header class="app-header">
     <div class="header-brand" onclick="window.tvquranApp.switchView('home')">
-      <img src="favicon.svg" alt="tvQuran Logo" class="brand-logo-icon">
+      <img src="favicon.svg" alt="NQuran Logo" class="brand-logo-icon">
       <div class="brand-text">
-        <h1>tvQuran</h1>
+        <h1>NQuran</h1>
       </div>
     </div>
 
     <!-- Main Navigation Tabs -->
     <nav class="header-nav">
-      <button class="nav-tab-btn active" data-view-target="home">
-        <i class="fa fa-home"></i> <span data-i18n="nav_home">الرئيسية</span>
-      </button>
-      <button class="nav-tab-btn" data-view-target="reciters">
+      <button class="nav-tab-btn active" data-view-target="reciters">
         <i class="fa fa-microphone"></i> <span data-i18n="nav_reciters">القراء</span>
       </button>
       <button class="nav-tab-btn" data-view-target="surahs">
@@ -52,8 +49,8 @@
       <button class="nav-tab-btn" data-view-target="collections">
         <i class="fa fa-star"></i> <span data-i18n="nav_collections">المختارات</span>
       </button>
-      <button class="nav-tab-btn" data-view-target="live">
-        <i class="fa fa-podcast"></i> <span data-i18n="nav_live">البث</span>
+      <button class="nav-tab-btn" data-view-target="urdu">
+        <i class="fa fa-graduation-cap"></i> <span data-i18n="nav_urdu">أردو</span>
       </button>
       <button class="nav-tab-btn" data-view-target="favorites">
         <i class="fa fa-heart"></i> <span data-i18n="nav_favorites">المفضلة</span>
@@ -64,7 +61,7 @@
     <div class="header-actions">
       <div class="quick-search-bar" id="searchTriggerBtn">
         <i class="fa fa-search"></i>
-        <span data-i18n="quick_search">بحث سريع...</span>
+        <span data-i18n="quick_search">بحث...</span>
         <span class="search-kbd">⌘K</span>
       </div>
 
@@ -78,9 +75,9 @@
         <span id="langBtnText">English</span>
       </button>
 
-      <!-- Support Us Button -->
+      <!-- Support Button -->
       <button class="btn-support-pill" data-open-support>
-        <i class="fa fa-heart"></i> <span data-i18n="support_us">ادعم الموقع ❤️</span>
+        <i class="fa fa-heart"></i> <span data-i18n="support_btn">ادعم</span>
       </button>
     </div>
   </header>
@@ -103,7 +100,7 @@
           <div class="hero-slide active" data-slide-index="0" style="background-image: linear-gradient(135deg, rgba(5, 150, 105, 0.25) 0%, rgba(15, 23, 42, 0.88) 100%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1600&auto=format&fit=crop&q=80');">
             <div class="hero-content">
               <div class="hero-slide-badge">
-                <i class="fa fa-leaf"></i> <span>tvQuran • القرآن الكريم</span>
+                <i class="fa fa-leaf"></i> <span>NQuran • القرآن الكريم</span>
               </div>
               <h2 data-i18n="hero_title">استمع إلى القرآن الكريم بسكينة</h2>
               <p data-i18n="hero_subtitle">
@@ -446,16 +443,65 @@
     </section>
 
     <!-- =========================================================================
-         VIEW 5: LIVE TV & RADIO (البث المباشر)
+         VIEW 5: URDU LECTURES (محاضرات الأردية - عفت مقبول)
          ========================================================================= -->
-    <section id="view-live" class="view-section">
-      <div class="section-header">
-        <div class="section-title">
-          <div class="section-title-icon"><i class="fa fa-podcast"></i></div>
-          <h3 data-i18n="live_radio_title">الإذاعات والبث المباشر من الحرمين</h3>
+    <section id="view-urdu" class="view-section">
+      
+      <!-- Speaker Hero / Featured Banner -->
+      <div class="urdu-speaker-banner">
+        <div class="urdu-speaker-info">
+          <div class="urdu-badge">
+            <i class="fa fa-graduation-cap"></i> <span>NQ-International • NurulQuran</span>
+          </div>
+          <h2 data-i18n="urdu_lectures_title">محاضرات وتفسير القرآن بالأردية</h2>
+          <p data-i18n="urdu_lectures_subtitle">
+            سلسلة المحاضرات والدروس الإيمانية وتفسير القرآن بالأردية للأستاذة عفت مقبول (مؤسسة نور القرآن - NQ International).
+          </p>
+          <div class="urdu-speaker-meta">
+            <div class="speaker-tag"><i class="fa fa-user"></i> <span data-i18n="speaker_name">Ustadha Iffat Maqbool</span></div>
+            <div class="speaker-tag"><i class="fa fa-headphones"></i> <span>10 Lectures</span></div>
+            <div class="speaker-tag"><i class="fa fa-language"></i> <span>Urdu • اردو</span></div>
+          </div>
+          <div class="urdu-actions">
+            <a href="https://www.nq-international.com" target="_blank" rel="noopener" class="btn-primary" style="text-decoration: none;">
+              <i class="fa fa-external-link"></i> <span data-i18n="visit_nq">Visit nq-international.com</span>
+            </a>
+            <button class="btn-secondary" onclick="window.tvquranPlayer.playTrack(window.TVQURAN_DATA.urdu_lectures[0])">
+              <i class="fa fa-play"></i> <span data-i18n="play_first_lecture">تشغيل الدرس الأول</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Speaker Nature Card -->
+        <div class="urdu-featured-card">
+          <div class="urdu-card-image">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&auto=format&fit=crop&q=80" alt="NurulQuran Urdu Lectures">
+            <div class="urdu-card-overlay">
+              <h4>نور القرآن الكريم</h4>
+              <p>NurulQuran • NQ International</p>
+            </div>
+          </div>
+          <div class="urdu-quote">
+            <i class="fa fa-quote-right" style="color:var(--accent-gold); margin-bottom: 0.4rem; display:block;"></i>
+            <p>«قُرْآنٌ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ - القرآن حياة القلوب ونور الدروب»</p>
+            <span>- الأستاذة عفت مقبول</span>
+          </div>
         </div>
       </div>
-      <div class="live-streams-grid" id="liveStreamsGrid"></div>
+
+      <!-- Top Ten Urdu Lectures Section Header -->
+      <div class="section-header" style="margin-top: 2rem;">
+        <div class="section-title">
+          <div class="section-title-icon"><i class="fa fa-list-ol"></i></div>
+          <h3 data-i18n="top_urdu_lectures">أفضل 10 محاضرات ودروس تفسير للأستاذة عفت مقبول</h3>
+        </div>
+        <a href="https://www.nq-international.com" target="_blank" rel="noopener" class="btn-secondary" style="font-size: 0.82rem; padding: 0.45rem 1rem; text-decoration: none; border-radius: var(--radius-full);">
+          <i class="fa fa-globe"></i> <span>nq-international.com</span>
+        </a>
+      </div>
+
+      <!-- Grid for Top 10 Lectures -->
+      <div class="urdu-lectures-grid" id="urduLecturesGrid"></div>
     </section>
 
     <!-- =========================================================================
@@ -484,8 +530,8 @@
     <button class="mobile-nav-item" data-view-target="surahs">
       <i class="fa fa-book"></i> <span data-i18n="nav_surahs">المصحف</span>
     </button>
-    <button class="mobile-nav-item" data-view-target="collections">
-      <i class="fa fa-star"></i> <span data-i18n="nav_collections">المختارات</span>
+    <button class="mobile-nav-item" data-view-target="urdu">
+      <i class="fa fa-graduation-cap"></i> <span data-i18n="nav_urdu">أردو</span>
     </button>
     <button class="mobile-nav-item" data-view-target="favorites">
       <i class="fa fa-heart"></i> <span data-i18n="nav_favorites">المفضلة</span>
@@ -594,7 +640,7 @@
        ========================================================================= -->
   <div class="fullscreen-player-modal" id="fullscreenPlayerModal">
     <div class="fullscreen-top-bar">
-      <h4><i class="fa fa-headphones" style="color:var(--accent-emerald);"></i> tvQuran Live Stream Player</h4>
+      <h4><i class="fa fa-headphones" style="color:var(--accent-emerald);"></i> NQuran Audio Player</h4>
       <button class="dialog-close-btn" id="fsCloseBtn"><i class="fa fa-times"></i></button>
     </div>
 
@@ -636,9 +682,9 @@
   <footer class="app-footer">
     <div class="footer-grid">
       <div class="footer-brand">
-        <h4>tvQuran.com</h4>
+        <h4>NQuran.com</h4>
         <p data-i18n="footer_about">
-          موقع تي في قرآن (tvQuran.com) هو منصة إسلامية رائدة غير ربحية تهدف إلى إيصال القرآن الكريم وتلاواته الخاشعة إلى كل مسلم ومسلمة حول العالم بأحدث التقنيات وأعلى جودة.
+          موقع NQuran (nquran.com) هو منصة إسلامية رائدة غير ربحية تهدف إلى إيصال القرآن الكريم وتلاواته الخاشعة ودروس التفسير بالأردية والعربية إلى كل مسلم ومسلمة حول العالم بأحدث التقنيات وأعلى جودة.
         </p>
       </div>
 
@@ -646,9 +692,9 @@
         <h5 data-i18n="quick_categories">الأقسام</h5>
         <ul>
           <li><a onclick="window.tvquranApp.switchView('reciters')" data-i18n="nav_reciters">دليل القراء</a></li>
-          <li><a onclick="window.tvquranApp.switchView('surahs')" data-i18n="nav_surahs">المصحف والسور</a></li>
-          <li><a onclick="window.tvquranApp.switchView('collections')" data-i18n="nav_collections">تلاوات خاشعة</a></li>
-          <li><a onclick="window.tvquranApp.switchView('live')" data-i18n="nav_live">البث المباشر</a></li>
+          <li><a onclick="window.tvquranApp.switchView('surahs')" data-i18n="nav_surahs">المصحف</a></li>
+          <li><a onclick="window.tvquranApp.switchView('collections')" data-i18n="nav_collections">المختارات</a></li>
+          <li><a onclick="window.tvquranApp.switchView('urdu')" data-i18n="nav_urdu">أردو</a></li>
         </ul>
       </div>
 
@@ -665,9 +711,9 @@
       <div class="footer-column">
         <h5 data-i18n="support_us">عن الموقع</h5>
         <ul>
-          <li><a data-open-support data-i18n="support_us">ادعم استمرار الموقع ❤️</a></li>
-          <li><a onclick="window.tvquranApp.openShareModal({title_ar:'tvQuran.com'})" data-i18n="embed_code">كود التضمين للناشرين</a></li>
-          <li><a href="mailto:contact@tvquran.com" data-i18n="report_issue">اتصل بنا / إبلاغ</a></li>
+          <li><a data-open-support data-i18n="support_us">ادعم الموقع ❤️</a></li>
+          <li><a onclick="window.tvquranApp.openShareModal({title_ar:'NQuran.com'})" data-i18n="embed_code">كود التضمين للناشرين</a></li>
+          <li><a href="https://www.nq-international.com" target="_blank" rel="noopener">موقع NurulQuran (NQ)</a></li>
         </ul>
       </div>
     </div>
@@ -675,13 +721,13 @@
     <!-- Footer Bottom Row -->
     <div class="footer-bottom">
       <div class="footer-rights" data-i18n="footer_rights">
-        جميع الحقوق محفوظة لموقع تي في قرآن © 2008-2026
+        جميع الحقوق محفوظة لموقع NQuran © 2008-2026
       </div>
 
       <!-- Version Indicator (Mandatory System Rule) -->
       <div class="footer-version-badge">
         <i class="fa fa-code-fork"></i>
-        <span>v1.0.4 (updated 2026-08-27 18:01)</span>
+        <span>v1.0.5 (updated 2026-08-28 07:51)</span>
       </div>
     </div>
   </footer>

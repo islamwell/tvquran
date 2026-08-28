@@ -4,27 +4,28 @@
 
 const TRANSLATIONS = {
   ar: {
-    app_title: "tvQuran",
-    app_subtitle: "بوابتك العصرية للاستماع إلى تلاوات القرآن الكريم بأصوات مشاهير القراء بجودة عالية",
+    app_title: "NQuran",
+    app_subtitle: "بوابتك العصرية للاستماع إلى تلاوات القرآن الكريم بأصوات مشاهير القراء ودروس التفسير بجودة عالية",
     
     // Navigation
     nav_home: "الرئيسية",
     nav_reciters: "القراء",
     nav_surahs: "المصحف",
     nav_collections: "المختارات",
-    nav_live: "البث",
+    nav_urdu: "أردو",
     nav_favorites: "المفضلة",
     reciter_surahs_heading: "سور القرآن الكريم",
     
     // Actions & Buttons
-    search_placeholder: "ابحث عن قارئ، سورة، أو تلاوة... (اضغط Ctrl+K)",
-    quick_search: "بحث سريع...",
+    search_placeholder: "ابحث عن قارئ، سورة، أو محاضرة... (اضغط Ctrl+K)",
+    quick_search: "بحث...",
     listen_now: "استمع الآن",
     browse_all: "عرض الكل",
     download_mp3: "تحميل MP3",
     share: "مشاركة",
     embed_code: "كود التضمين",
     report_issue: "إبلاغ عن خطأ",
+    support_btn: "ادعم",
     support_us: "ادعم الموقع ❤️",
     play_all: "تشغيل الكل",
     pause: "إيقاف مؤقت",
@@ -44,6 +45,9 @@ const TRANSLATIONS = {
     open_tafsir: "التفسير الميسر",
     tafsir: "التفسير",
     translation: "الترجمة",
+    visit_nq: "زيارة nq-international.com",
+    play_first_lecture: "تشغيل الدرس الأول",
+    listen_lecture: "استماع للمحاضرة",
     
     // Headings & Sections
     hero_title: "استمع إلى القرآن الكريم بسكينة",
@@ -52,6 +56,10 @@ const TRANSLATIONS = {
     trending_reciters: "مشاهير القراء",
     popular_recitations: "تلاوات مختارة وخاشعة",
     quick_categories: "الأقسام الرئيسية",
+    urdu_lectures_title: "محاضرات وتفسير القرآن بالأردية",
+    urdu_lectures_subtitle: "سلسلة المحاضرات والدروس الإيمانية المختارة للأستاذة عفت مقبول - مؤسسة نور القرآن العالمية (NQ International)",
+    speaker_name: "الأستاذة عفت مقبول",
+    top_urdu_lectures: "أفضل 10 محاضرات ودروس تفسير للأستاذة عفت مقبول",
     live_radio_title: "الإذاعات والبث المباشر",
     all_surahs_title: "فهرس سور القرآن الكريم (114 سورة)",
     reciters_catalog: "دليل القراء والمصاحف المرتلة",
@@ -91,12 +99,12 @@ const TRANSLATIONS = {
     no_search_results: "لم يتم العثور على نتائج مطابقة لكلمة البحث.",
     
     // Footer
-    footer_about: "موقع تي في قرآن (tvQuran.com) هو منصة إسلامية رائدة غير ربحية تهدف إلى إيصال القرآن الكريم وتلاواته الخاشعة إلى كل مسلم ومسلمة حول العالم بأحدث التقنيات وأعلى جودة.",
-    footer_rights: "جميع الحقوق محفوظة لموقع تي في قرآن © 2008-2026",
+    footer_about: "موقع NQuran (nquran.com) هو منصة إسلامية رائدة غير ربحية تهدف إلى إيصال القرآن الكريم وتلاواته الخاشعة ودروس التفسير بالأردية والعربية إلى كل مسلم ومسلمة حول العالم بأحدث التقنيات وأعلى جودة.",
+    footer_rights: "جميع الحقوق محفوظة لموقع NQuran © 2008-2026",
     footer_version_prefix: "الإصدار",
     
     // Modal Titles
-    modal_search_title: "البحث الشامل في tvQuran",
+    modal_search_title: "البحث الشامل في NQuran",
     modal_share_title: "مشاركة التلاوة أو تضمينها",
     modal_timer_title: "ضبط مؤقت النوم",
     modal_reciter_title: "تلاوات القارئ",
@@ -104,28 +112,29 @@ const TRANSLATIONS = {
   },
   
   en: {
-    app_title: "tvQuran",
-    app_subtitle: "Your modern gateway to listening and downloading high-quality Quran recitations by world-famous reciters",
+    app_title: "NQuran",
+    app_subtitle: "Your modern gateway to listening to high-quality Quran recitations and Urdu Tafseer lectures by Ustadha Iffat Maqbool",
     
     // Navigation
     nav_home: "Home",
     nav_reciters: "Reciters",
     nav_surahs: "Mushaf",
     nav_collections: "Collections",
-    nav_live: "Live",
+    nav_urdu: "Urdu",
     nav_favorites: "Favorites",
     reciter_surahs_heading: "Quran Surahs",
     
     // Actions & Buttons
-    search_placeholder: "Search for a reciter, surah, or recitation... (Press Ctrl+K)",
-    quick_search: "Fast search...",
+    search_placeholder: "Search for a reciter, surah, or lecture... (Press Ctrl+K)",
+    quick_search: "Search...",
     listen_now: "Listen Now",
     browse_all: "Browse All",
     download_mp3: "Download MP3",
     share: "Share",
     embed_code: "Embed Code",
     report_issue: "Report an Issue",
-    support_us: "Support Us ❤️",
+    support_btn: "Support",
+    support_us: "Support ❤️",
     play_all: "Play All",
     pause: "Pause",
     play: "Play",
@@ -144,6 +153,9 @@ const TRANSLATIONS = {
     open_tafsir: "Open Exegesis (Tafsir)",
     tafsir: "Tafsir",
     translation: "Translation",
+    visit_nq: "Visit nq-international.com",
+    play_first_lecture: "Play First Lecture",
+    listen_lecture: "Listen Lecture",
     
     // Headings & Sections
     hero_title: "Listen to the Quran with Tranquility",
@@ -152,6 +164,10 @@ const TRANSLATIONS = {
     trending_reciters: "Featured Reciters",
     popular_recitations: "Curated Heart-Touching Recitations",
     quick_categories: "Featured Categories",
+    urdu_lectures_title: "Urdu Quran Lectures & Tafseer",
+    urdu_lectures_subtitle: "Curated Urdu Quran Tafseer & spiritual lectures by Ustadha Iffat Maqbool (Founder of NurulQuran - nq-international.com)",
+    speaker_name: "Ustadha Iffat Maqbool",
+    top_urdu_lectures: "Top 10 Curated Urdu Lectures (Ustadha Iffat Maqbool)",
     live_radio_title: "Live Radios & Broadcasts",
     all_surahs_title: "Quran Surah Index (114 Surahs)",
     reciters_catalog: "Reciters Catalog & Complete Recitations",
@@ -160,10 +176,10 @@ const TRANSLATIONS = {
     
     // Categories
     cat_all: "All",
-    cat_beautiful: "Emotional Recitations",
+    cat_beautiful: "Heart-Touching",
     cat_ruqyah: "Sharia Ruqyah",
-    cat_dhikr: "Daily Dhikr & Duas",
-    cat_rare: "Historic & Rare",
+    cat_dhikr: "Daily Dhikr & Dua",
+    cat_rare: "Rare Recitations",
     cat_adhan: "Adhan & Takbeer",
     cat_children: "Young Reciters",
     
@@ -178,8 +194,8 @@ const TRANSLATIONS = {
     likes: "Likes",
     
     // Themes & Settings
-    theme_dark: "Velvet Dark Theme",
-    theme_emerald: "Royal Emerald & Gold",
+    theme_dark: "Velvet Dark",
+    theme_emerald: "Royal Emerald",
     theme_light: "Pure Noor (Light)",
     select_reciter: "Select Reciter",
     font_size: "Font Size",
