@@ -424,12 +424,14 @@ class TVQuranApp {
     const isAr = this.currentLanguage === 'ar';
     const lectures = window.TVQURAN_DATA.urdu_lectures || [];
 
-    container.innerHTML = lectures.map(l => `
+    container.innerHTML = lectures.map(l => {
+      const isFav = this.player ? this.player.isFavorite(l) : false;
+      return `
       <div class="urdu-lecture-card">
         <div class="urdu-lecture-thumb">
           <img src="${l.cover}" alt="${isAr ? l.title_ar : l.title_en}" loading="lazy">
           <span class="urdu-lecture-category">${l.category}</span>
-          <div class="urdu-play-overlay" onclick='window.tvquranPlayer.playTrack(${JSON.stringify(l).replace(/'/g, "&#39;")})'>
+          <div class="urdu-play-overlay" onclick="window.tvquranApp.playUrduLecture('${l.id}')">
             <div class="urdu-play-btn-circle">
               <i class="fa fa-play"></i>
             </div>
@@ -449,15 +451,41 @@ class TVQuranApp {
               <span><i class="fa fa-headphones"></i> ${l.listens}</span>
             </div>
             <div class="urdu-lecture-actions">
-              <button class="btn-icon-sm" onclick='window.tvquranPlayer.playTrack(${JSON.stringify(l).replace(/'/g, "&#39;")})' title="${isAr ? 'استماع' : 'Play'}"><i class="fa fa-play"></i></button>
-              <button class="btn-icon-sm" onclick='window.tvquranPlayer.toggleFavorite(${JSON.stringify(l).replace(/'/g, "&#39;")})' title="${isAr ? 'حفظ' : 'Save'}"><i class="fa fa-heart-o"></i></button>
-              <button class="btn-icon-sm" onclick='window.tvquranApp.openShareModal(${JSON.stringify(l).replace(/'/g, "&#39;")})' title="${isAr ? 'مشاركة' : 'Share'}"><i class="fa fa-share-alt"></i></button>
-              <a href="${l.audio_url || l.url}" download class="btn-icon-sm" title="${isAr ? 'تحميل' : 'Download'}"><i class="fa fa-download"></i></a>
+              <button class="btn-icon-sm" onclick="window.tvquranApp.playUrduLecture('${l.id}')" title="${isAr ? 'استماع' : 'Play'}"><i class="fa fa-play"></i></button>
+              <button class="btn-icon-sm ${isFav ? 'active' : ''}" onclick="window.tvquranApp.toggleFavoriteUrdu('${l.id}', event)" title="${isAr ? 'حفظ في المفضلة' : 'Save to Favorites'}">
+                <i class="fa ${isFav ? 'fa-heart' : 'fa-heart-o'}" style="${isFav ? 'color: #ef4444;' : ''}"></i>
+              </button>
+              <button class="btn-icon-sm" onclick="window.tvquranApp.openShareModalById('${l.id}')" title="${isAr ? 'مشاركة' : 'Share'}"><i class="fa fa-share-alt"></i></button>
+              <a href="${l.url || l.audio_url}" download class="btn-icon-sm" title="${isAr ? 'تحميل' : 'Download'}"><i class="fa fa-download"></i></a>
             </div>
           </div>
         </div>
       </div>
-    `).join('');
+      `;
+    }).join('');
+  }
+
+  playUrduLecture(lectureId) {
+    const lectures = window.TVQURAN_DATA.urdu_lectures || [];
+    const lecture = lectures.find(l => l.id === lectureId) || lectures[0];
+    if (!lecture) return;
+    this.player.playTrack(lecture, lectures);
+  }
+
+  toggleFavoriteUrdu(lectureId, event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    const lecture = (window.TVQURAN_DATA.urdu_lectures || []).find(l => l.id === lectureId);
+    if (!lecture) return;
+    this.player.toggleFavorite(lecture);
+  }
+
+  openShareModalById(id) {
+    const lecture = (window.TVQURAN_DATA.urdu_lectures || []).find(l => l.id === id);
+    if (lecture) {
+      this.openShareModal(lecture);
+    }
   }
 
   // 6. Favorites & History
@@ -480,7 +508,7 @@ class TVQuranApp {
     container.innerHTML = favs.map(t => `
       <div class="track-card">
         <div class="track-top">
-          <button class="track-play-trigger" onclick='window.tvquranPlayer.playTrack(${JSON.stringify(t)})'>
+          <button class="track-play-trigger" onclick='window.tvquranPlayer.playTrack(${JSON.stringify(t).replace(/'/g, "&#39;")})'>
             <i class="fa fa-play"></i>
           </button>
           <div class="track-details" style="flex:1;">
@@ -489,10 +517,12 @@ class TVQuranApp {
           </div>
         </div>
         <div class="track-footer">
-          <span><i class="fa fa-heart" style="color:#ef4444;"></i> ${isAr ? 'في المفضلة' : 'Favorite'}</span>
+          <button class="btn-icon-sm" onclick='window.tvquranPlayer.toggleFavorite(${JSON.stringify(t).replace(/'/g, "&#39;")})' title="${isAr ? 'إزالة من المفضلة' : 'Remove from Favorites'}">
+            <i class="fa fa-heart" style="color:#ef4444;"></i>
+          </button>
           <div class="track-actions-bar">
-            <a href="${t.url}" download class="btn-icon-sm"><i class="fa fa-download"></i></a>
-            <button class="btn-icon-sm" onclick='window.tvquranApp.openShareModal(${JSON.stringify(t)})'><i class="fa fa-share-alt"></i></button>
+            <a href="${t.url || t.audio_url}" download class="btn-icon-sm" title="${isAr ? 'تحميل' : 'Download'}"><i class="fa fa-download"></i></a>
+            <button class="btn-icon-sm" onclick='window.tvquranApp.openShareModal(${JSON.stringify(t).replace(/'/g, "&#39;")})' title="${isAr ? 'مشاركة' : 'Share'}"><i class="fa fa-share-alt"></i></button>
           </div>
         </div>
       </div>

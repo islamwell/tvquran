@@ -144,22 +144,37 @@ class TVQuranPlayer {
   // Load and play a track
   playTrack(track, queueList = null) {
     if (!track) return;
+    track.url = track.url || track.audio_url;
     this.currentTrack = track;
     
     if (queueList && Array.isArray(queueList)) {
-      this.queue = queueList;
-      this.queueIndex = this.queue.findIndex(t => t.url === track.url);
+      this.queue = queueList.map(t => {
+        t.url = t.url || t.audio_url;
+        return t;
+      });
+      this.queueIndex = this.queue.findIndex(t => (t.url || t.audio_url) === track.url || t.id === track.id);
       if (this.queueIndex === -1) this.queueIndex = 0;
     } else if (this.queue.length === 0) {
       this.queue = [track];
       this.queueIndex = 0;
     }
 
-    this.audio.src = track.url;
+    const targetSrc = track.url || track.audio_url;
+    if (this.audio.src !== targetSrc) {
+      this.audio.src = targetSrc;
+    }
     this.audio.playbackRate = this.playbackRate;
     
     this.updateTrackMetaUI(track);
-    this.audio.play().catch(err => console.log('Audio playback prevented or interrupted', err));
+    this.checkIsFavorite(track);
+
+    const playPromise = this.audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(err => {
+        console.warn('Audio playback prevented or waiting for interaction:', err);
+      });
+    }
+
     this.addToHistory(track);
     this.updateMediaSession(track);
   }
@@ -369,30 +384,59 @@ class TVQuranPlayer {
   }
 
   // Favorites Management
-  toggleFavoriteCurrent() {
-    if (!this.currentTrack) return;
-    const index = this.favorites.findIndex(f => f.url === this.currentTrack.url);
+  toggleFavorite(track) {
+    if (!track) return;
+    track.url = track.url || track.audio_url;
+    const trackUrl = track.url;
+    const index = this.favorites.findIndex(f => (f.url || f.audio_url) === trackUrl || (track.id && f.id === track.id));
+    
     if (index > -1) {
       this.favorites.splice(index, 1);
+      if (window.tvquranApp && typeof window.tvquranApp.showToast === 'function') {
+        window.tvquranApp.showToast(window.tvquranApp.currentLanguage === 'ar' ? 'تمت الإزالة من المفضلة' : 'Removed from Favorites');
+      }
     } else {
-      this.favorites.unshift(this.currentTrack);
+      this.favorites.unshift(track);
+      if (window.tvquranApp && typeof window.tvquranApp.showToast === 'function') {
+        window.tvquranApp.showToast(window.tvquranApp.currentLanguage === 'ar' ? 'تمت الإضافة إلى المفضلة ❤️' : 'Added to Favorites ❤️');
+      }
     }
     localStorage.setItem('tvquran_favorites', JSON.stringify(this.favorites));
-    this.checkIsFavorite(this.currentTrack);
-    if (window.renderFavoritesView) window.renderFavoritesView();
+    
+    if (this.currentTrack && (this.currentTrack.id === track.id || (this.currentTrack.url || this.currentTrack.audio_url) === trackUrl)) {
+      this.checkIsFavorite(this.currentTrack);
+    }
+    if (window.tvquranApp && typeof window.tvquranApp.renderFavoritesView === 'function') {
+      window.tvquranApp.renderFavoritesView();
+    }
+    if (window.tvquranApp && typeof window.tvquranApp.renderUrduLecturesGrid === 'function') {
+      window.tvquranApp.renderUrduLecturesGrid();
+    }
+  }
+
+  toggleFavoriteCurrent() {
+    if (!this.currentTrack) return;
+    this.toggleFavorite(this.currentTrack);
+  }
+
+  isFavorite(track) {
+    if (!track) return false;
+    const trackUrl = track.url || track.audio_url;
+    return this.favorites.some(f => (f.url || f.audio_url) === trackUrl || (track.id && f.id === track.id));
   }
 
   checkIsFavorite(track) {
     if (!this.btnFav || !track) return;
-    const isFav = this.favorites.some(f => f.url === track.url);
+    const isFav = this.isFavorite(track);
     this.btnFav.classList.toggle('active', isFav);
     const icon = this.btnFav.querySelector('i');
     if (icon) icon.className = isFav ? 'fa fa-heart' : 'fa fa-heart-o';
   }
 
   addToHistory(track) {
-    this.history = this.history.filter(h => h.url !== track.url);
-    this.history.unshift({ ...track, playedAt: new Date().toISOString() });
+    const trackUrl = track.url || track.audio_url;
+    this.history = this.history.filter(h => (h.url || h.audio_url) !== trackUrl && (track.id ? h.id !== track.id : true));
+    this.history.unshift({ ...track, url: trackUrl, playedAt: new Date().toISOString() });
     if (this.history.length > 50) this.history.pop();
     localStorage.setItem('tvquran_history', JSON.stringify(this.history));
   }
