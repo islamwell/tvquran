@@ -323,7 +323,7 @@ class TVQuranApp {
             <span class="reciter-riwayah">${this.reciterRiwayah(r)}</span>
           </div>
         </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem; line-height: 1.5;">
+        <p style="font-size: 0.85rem; color: var(--accent-gold); margin-bottom: 0.8rem; line-height: 1.6;">
           ${this.content(r, 'bio')}
         </p>
         <div class="reciter-stats">
@@ -387,6 +387,9 @@ class TVQuranApp {
             <span class="reciter-riwayah">${this.reciterRiwayah(r)}</span>
           </div>
         </div>
+        <p style="font-size: 0.85rem; color: var(--accent-gold); margin: 0.5rem 0 0.8rem; line-height: 1.6;">
+          ${this.content(r, 'bio')}
+        </p>
         <div class="reciter-stats">
           <span><i class="fa fa-file-audio-o"></i> ${r.total_recitations} ${this.t('surahs')}</span>
           <span><i class="fa fa-play"></i> ${r.total_listens}</span>

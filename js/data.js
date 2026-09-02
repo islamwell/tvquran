@@ -138,8 +138,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "48.5M",
       country: "Kuwait",
-      bio_en: "Imam of the Grand Mosque of Kuwait and internationally acclaimed reciter and nasheed artist.",
-      bio_ar: "إمام المسجد الكبير بدولة الكويت وأحد أشهر قراء العالم الإسلامي المعاصرين."
+      bio_en: "“Unquestionably, by the remembrance of Allah hearts are assured.” [13:28]",
+      bio_ar: "﴿ أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ ﴾ [الرعد: 28]"
     },
     {
       id: "abdulbasit-murattal",
@@ -154,8 +154,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "62.1M",
       country: "Egypt",
-      bio_en: "Legendary Egyptian Qari known as 'The Golden Throat' and the Voice of Mecca.",
-      bio_ar: "صاحب الحنجرة الذهبية وصوت مكة، أحد أعظم قراء القرآن في التاريخ الحديث."
+      bio_en: "“And recite the Quran with measured recitation.” [73:4]",
+      bio_ar: "﴿ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا ﴾ [المزمل: 4]"
     },
     {
       id: "abdulbasit-mujawwad",
@@ -170,8 +170,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "39.4M",
       country: "Egypt",
-      bio_en: "Masterful melodic recitation (Mujawwad) by Sheikh Abdul Basit Abdul Samad.",
-      bio_ar: "المصحف المجود الخالد للشيخ عبد الباسط عبد الصمد."
+      bio_en: "“Indeed, this Quran guides to that which is most suitable.” [17:9]",
+      bio_ar: "﴿ إِنَّ هَٰذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ ﴾ [الإسراء: 9]"
     },
     {
       id: "sudais",
@@ -186,8 +186,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "44.2M",
       country: "Saudi Arabia",
-      bio_en: "Chief Imam and Khatib of the Grand Mosque in Makkah, Saudi Arabia.",
-      bio_ar: "إمام وخطيب المسجد الحرام بمكة المكرمة والرئيس العام لشؤون المسجد الحرام."
+      bio_en: "“And when My servants ask you concerning Me, indeed I am near.” [2:186]",
+      bio_ar: "﴿ وَإِذَا سَأَلَكَ عِبَادِي عَنِّي فَإِنِّي قَرِيبٌ ﴾ [البقرة: 186]"
     },
     {
       id: "shuraim",
@@ -202,8 +202,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "35.8M",
       country: "Saudi Arabia",
-      bio_en: "Former leading Imam and Khatib of the Grand Mosque in Makkah.",
-      bio_ar: "إمام وخطيب المسجد الحرام الأسبق وأستاذ الدراسات الإسلامية."
+      bio_en: "“And say, 'My Lord, increase me in knowledge.'” [20:114]",
+      bio_ar: "﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾ [طه: 114]"
     },
     {
       id: "ghamdi",
@@ -218,8 +218,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "38.9M",
       country: "Saudi Arabia",
-      bio_en: "Prominent Saudi reciter celebrated for smooth, melodious, and tranquil recitation.",
-      bio_ar: "قارئ سعودي مشهور بصوته العذب وتلاوته الخاشعة الهادئة."
+      bio_en: "“Indeed, with hardship [will be] ease.” [94:6]",
+      bio_ar: "﴿ فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ۞ إِنَّ مَعَ الْعُسْرِ يُسْرًا ﴾ [الشرح: 5-6]"
     },
     {
       id: "muaiqly",
@@ -234,8 +234,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "53.7M",
       country: "Saudi Arabia",
-      bio_en: "Beloved Imam of the Grand Mosque in Makkah, famous for deeply emotional recitations.",
-      bio_ar: "إمام المسجد الحرام بمكة المكرمة وصاحب التلاوات الباكية الخاشعة."
+      bio_en: "“And rely upon the Ever-Living who does not die.” [25:58]",
+      bio_ar: "﴿ وَتَوَكَّلْ عَلَى الْحَيِّ الَّذِي لَا يَمُوتُ ﴾ [الفرقان: 58]"
     },
     {
       id: "hussary-murattal",
@@ -250,8 +250,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "41.6M",
       country: "Egypt",
-      bio_en: "Master of Tajweed rules and pioneer of recorded Quranic recitations.",
-      bio_ar: "شيخ عموم المقارئ المصرية الأسبق وشيخ علم التجويد الأول."
+      bio_en: "“The month of Ramadan in which was revealed the Quran, a guidance for the people.” [2:185]",
+      bio_ar: "﴿ شَهْرُ رَمَضَانَ الَّذِي أُنزِلَ فِيهِ الْقُرْآنُ هُدًى لِّلنَّاسِ ﴾ [البقرة: 185]"
     },
     {
       id: "hussary-warsh",
@@ -266,8 +266,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "19.8M",
       country: "Egypt",
-      bio_en: "Flawless recitation according to the narration of Warsh 'an Nafi'.",
-      bio_ar: "تلاوة متقنة برواية ورش عن نافع من طريق الأزرق."
+      bio_en: "“Nun. By the pen and what they inscribe.” [68:1]",
+      bio_ar: "﴿ ن ۚ وَالْقَلَمِ وَمَا يَسْطُرُونَ ﴾ [القلم: 1]"
     },
     {
       id: "dosari",
@@ -282,8 +282,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "47.9M",
       country: "Saudi Arabia",
-      bio_en: "Imam of the Grand Mosque in Makkah known for captivating, powerful Quranic delivery.",
-      bio_ar: "إمام المسجد الحرام بمكة المكرمة وعضو هيئة التدريس بجامعة الملك سعود."
+      bio_en: "“And the servants of the Most Merciful are those who walk upon the earth easily.” [25:63]",
+      bio_ar: "﴿ وَعِبَادُ الرَّحْمَٰنِ الَّذِينَ يَمْشُونَ عَلَى الْأَرْضِ هَوْنًا ﴾ [الفرقان: 63]"
     },
     {
       id: "minshawi-murattal",
@@ -298,8 +298,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "58.3M",
       country: "Egypt",
-      bio_en: "Renowned as 'The Weeping Voice', an iconic master of emotive Quranic recitation.",
-      bio_ar: "الصوت الباكي ذو النبرة الخاشعة الحزينة التي تهز القلوب."
+      bio_en: "“So which of the favors of your Lord would you deny?” [55:13]",
+      bio_ar: "﴿ فَبِأَيِّ آلَاءِ رَبِّكُمَا تُكَذِّبَانِ ﴾ [الرحمن: 13]"
     },
     {
       id: "minshawi-mujawwad",
@@ -314,8 +314,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "36.2M",
       country: "Egypt",
-      bio_en: "Sublime Mujawwad master recordings by Sheikh Mohamed Siddiq El-Minshawi.",
-      bio_ar: "المصحف المجود الفريد للشيخ محمد صديق المنشاوي."
+      bio_en: "“And We send down of the Quran that which is healing and mercy for the believers.” [17:82]",
+      bio_ar: "﴿ وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ ﴾ [الإسراء: 82]"
     },
     {
       id: "salmi",
@@ -330,8 +330,8 @@ const TVQURAN_DATA = {
       total_recitations: 45,
       total_listens: "31.4M",
       country: "Saudi Arabia",
-      bio_en: "Popular contemporary Islamic preacher and reciter with heart-touching tones.",
-      bio_ar: "داعية وقارئ سعودي معاصر اشتهر بتلاواته المؤثرة وكلماته الوعظية."
+      bio_en: "“Say, 'O My servants who have transgressed against themselves, do not despair of the mercy of Allah.'” [39:53]",
+      bio_ar: "﴿ قُلْ يَا عِبَادِيَ الَّذِينَ أَسْرَفُوا عَلَىٰ أَنفُسِهِمْ لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ ﴾ [الزمر: 53]"
     },
     {
       id: "khalid-jalil",
@@ -346,8 +346,8 @@ const TVQURAN_DATA = {
       total_recitations: 86,
       total_listens: "29.7M",
       country: "Saudi Arabia",
-      bio_en: "Imam of King Khalid Mosque in Riyadh, famous for deep poignant Surah recitations.",
-      bio_ar: "إمام جامع الملك خالد بالرياض وصاحب التلاوات الخاشعة الشهيرة كسورة ق."
+      bio_en: "“And We have already created man and know what his soul whispers to him.” [50:16]",
+      bio_ar: "﴿ وَلَقَدْ خَلَقْنَا الْإِنسَانَ وَنَعْلَمُ مَا تُوَسْوِسُ بِهِ نَفْسُهُ ۖ وَنَحْنُ أَقْرَبُ إِلَيْهِ مِنْ حَبْلِ الْوَرِيدِ ﴾ [ق: 16]"
     },
     {
       id: "islam-sobhi",
@@ -362,8 +362,8 @@ const TVQURAN_DATA = {
       total_recitations: 60,
       total_listens: "34.6M",
       country: "Egypt",
-      bio_en: "Young Egyptian reciter whose soothing and resonant style went viral globally.",
-      bio_ar: "قارئ مصري شاب يتميز بصوت شجي وعذب لاقى شهرة واسعة."
+      bio_en: "“Do not grieve; indeed Allah is with us.” [9:40]",
+      bio_ar: "﴿ لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا ﴾ [التوبة: 40]"
     },
     {
       id: "hazza-balushi",
@@ -378,8 +378,8 @@ const TVQURAN_DATA = {
       total_recitations: 70,
       total_listens: "24.1M",
       country: "Oman",
-      bio_en: "Omani reciter renowned for exceptionally soothing and calm recitation style.",
-      bio_ar: "قارئ عماني يتميز بصوت رقيق ونبرة هادئة تريح النفوس."
+      bio_en: "“The Most Merciful. Taught the Quran. Created man. Taught him eloquence.” [55:1-4]",
+      bio_ar: "﴿ الرَّحْمَٰنُ ۞ عَلَّمَ الْقُرْآنَ ۞ خَلَقَ الْإِنسَانَ ۞ عَلَّمَهُ الْبَيَانَ ﴾ [الرحمن: 1-4]"
     },
     {
       id: "raad-kurdi",
@@ -394,8 +394,8 @@ const TVQURAN_DATA = {
       total_recitations: 65,
       total_listens: "27.8M",
       country: "Iraq",
-      bio_en: "Kurdish-Iraqi Imam and reciter with unique vocal richness and serenity.",
-      bio_ar: "إمام وقارئ عراقي ذو صوت رخيم وأسلوب فريد في الترتيل."
+      bio_en: "“And your Lord says, 'Call upon Me; I will respond to you.'” [40:60]",
+      bio_ar: "﴿ وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ ﴾ [غافر: 60]"
     },
     {
       id: "idris-abkar",
@@ -410,8 +410,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "30.5M",
       country: "Saudi Arabia",
-      bio_en: "Imam of Sheikh Zayed Grand Mosque, known for spiritual Duas and recitations.",
-      bio_ar: "إمام جامع الشيخ زايد الكبير بأبوظبي وصاحب الأدعية والتلاوات الخاشعة."
+      bio_en: "“No! Do not obey him. But prostrate and draw near [to Allah].” [96:19]",
+      bio_ar: "﴿ كَلَّا لَا تُطِعْهُ وَاسْجُدْ وَاقْتَرِب ۩ ﴾ [العلق: 19]"
     },
     {
       id: "ajamy",
@@ -426,8 +426,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "42.3M",
       country: "Saudi Arabia",
-      bio_en: "Prominent Saudi reciter with high-energy resonant vocal timbre.",
-      bio_ar: "قارئ سعودي بارز مشهور بقوة صوته وصفائه وانتشار تسجيلاته عالمياً."
+      bio_en: "“Sufficient for us is Allah, and [He is] the best Disposer of affairs.” [3:173]",
+      bio_ar: "﴿ حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ ﴾ [آل عمران: 173]"
     },
     {
       id: "shatri",
@@ -442,8 +442,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "33.2M",
       country: "Saudi Arabia",
-      bio_en: "Esteemed Jeddah-based reciter recognized for serene and crystal-clear pronunciation.",
-      bio_ar: "قارئ سعودي متميز بصوته الرخيم وإتقانه لمخارج الحروف والتجويد."
+      bio_en: "“Indeed, my Lord is near and responsive.” [11:61]",
+      bio_ar: "﴿ إِنَّ رَبِّي قَرِيبٌ مُّجِيبٌ ﴾ [هود: 61]"
     },
     {
       id: "ali-jaber",
@@ -458,8 +458,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "28.6M",
       country: "Saudi Arabia",
-      bio_en: "Former Imam of the Grand Mosque in Makkah whose soulful voice inspired generations.",
-      bio_ar: "إمام المسجد الحرام بمكة المكرمة الأسبق، صاحب الصوت الندي المؤثر."
+      bio_en: "“Allah is the Light of the heavens and the earth.” [24:35]",
+      bio_ar: "﴿ اللَّهُ نُورُ السَّمَاوَاتِ وَالْأَرْضِ ﴾ [النور: 35]"
     },
     {
       id: "mustafa-ismail",
@@ -474,8 +474,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "26.4M",
       country: "Egypt",
-      bio_en: "Unrivaled master of Maqamat melodic modes in Quranic recitation history.",
-      bio_ar: "عبقري التلاوة وأستاذ المقامات القرآنية بلا منازع في مصر والعالم."
+      bio_en: "“If We had sent down this Quran upon a mountain, you would have seen it humbled.” [59:21]",
+      bio_ar: "﴿ لَوْ أَنزَلْنَا هَٰذَا الْقُرْآنَ عَلَىٰ جَبَلٍ لَّرَأَيْتَهُ خَاشِعًا مُّتَصَدِّعًا مِّنْ خَشْيَةِ اللَّهِ ﴾ [الحشر: 21]"
     },
     {
       id: "abdulrahman-mosad",
@@ -490,8 +490,8 @@ const TVQURAN_DATA = {
       total_recitations: 40,
       total_listens: "22.3M",
       country: "Egypt",
-      bio_en: "Acclaimed contemporary reciter known for serene low-pitch pacing.",
-      bio_ar: "قارئ معاصر ذو نبرة صوت هادئة ومريحة تلقى رواجاً هائلاً."
+      bio_en: "“And give good tidings to the patient.” [2:155]",
+      bio_ar: "﴿ وَبَشِّرِ الصَّابِرِينَ ﴾ [البقرة: 155]"
     },
     {
       id: "yassin-al-jazairi",
@@ -506,8 +506,8 @@ const TVQURAN_DATA = {
       total_recitations: 114,
       total_listens: "16.7M",
       country: "Algeria",
-      bio_en: "Celebrated Algerian reciter mastering the Warsh 'an Nafi' narration.",
-      bio_ar: "قارئ جزائري متميز في تلاوة القرآن الكريم برواية ورش عن نافع."
+      bio_en: "“So be patient with a beautiful patience.” [70:5]",
+      bio_ar: "﴿ فَاصْبِرْ صَبْرًا جَمِيلًا ﴾ [المعارج: 5]"
     }
   ],
 
