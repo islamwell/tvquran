@@ -200,8 +200,9 @@ class TVQuranPlayer {
 
   // Play Surah by Reciter and Surah Number
   playSurah(reciterId, surahNumber) {
-    const surah = window.TVQURAN_DATA.surahs.find(s => s.id === surahNumber) || window.TVQURAN_DATA.surahs[0];
-    const reciter = window.TVQURAN_DATA.reciters.find(r => r.id === reciterId) || window.TVQURAN_DATA.reciters[0];
+    const surahNum = Number(surahNumber);
+    const surah = window.TVQURAN_DATA.surahs.find(s => s.id === surahNum) || window.TVQURAN_DATA.surahs[0];
+    const reciter = window.TVQURAN_DATA.reciters.find(r => r.id === reciterId) || window.TVQURAN_DATA.reciters.find(r => r.id === 'idris-abkar') || window.TVQURAN_DATA.reciters[0];
     const url = window.TVQURAN_DATA.getSurahAudioUrl(reciter.id, surah.id);
 
     const track = {
@@ -215,6 +216,7 @@ class TVQuranPlayer {
       surah_id: surah.id,
       reciter_id: reciter.id,
       url: url,
+      audio_url: url,
       cover: reciter.avatar
     };
 
@@ -230,16 +232,34 @@ class TVQuranPlayer {
       surah_id: s.id,
       reciter_id: reciter.id,
       url: window.TVQURAN_DATA.getSurahAudioUrl(reciter.id, s.id),
+      audio_url: window.TVQURAN_DATA.getSurahAudioUrl(reciter.id, s.id),
       cover: reciter.avatar
     }));
 
     this.playTrack(track, fullQueue);
   }
 
+  // Play a random Surah (by specified or current reciter)
+  playRandomSurah(reciterId = null) {
+    const currentReciter = reciterId || (this.currentTrack ? this.currentTrack.reciter_id : 'idris-abkar') || 'idris-abkar';
+    const currentSurahId = this.currentTrack && this.currentTrack.surah_id ? Number(this.currentTrack.surah_id) : 6;
+    
+    // Pick random surah from 1 to 114 different from current surah
+    const allSurahs = window.TVQURAN_DATA.surahs || [];
+    const pool = allSurahs.filter(s => s.id !== currentSurahId);
+    const chosen = pool.length > 0
+      ? pool[Math.floor(Math.random() * pool.length)]
+      : allSurahs[Math.floor(Math.random() * allSurahs.length)];
+      
+    if (chosen) {
+      this.playSurah(currentReciter, chosen.id);
+    }
+  }
+
   togglePlay() {
     if (!this.currentTrack) {
-      // Default track
-      this.playSurah('alafasy', 1);
+      // Default track: Surah 6 (Al-An'am) by Idris Abkar
+      this.playSurah('idris-abkar', 6);
       return;
     }
     if (this.audio.paused) {
@@ -250,12 +270,15 @@ class TVQuranPlayer {
   }
 
   nextTrack() {
-    if (this.queue.length === 0) return;
-    if (this.isShuffle) {
-      this.queueIndex = Math.floor(Math.random() * this.queue.length);
-    } else {
-      this.queueIndex = (this.queueIndex + 1) % this.queue.length;
+    if (this.isAutoRandomNext || this.isShuffle) {
+      this.playRandomSurah();
+      return;
     }
+    if (this.queue.length === 0) {
+      this.playRandomSurah();
+      return;
+    }
+    this.queueIndex = (this.queueIndex + 1) % this.queue.length;
     this.playTrack(this.queue[this.queueIndex]);
   }
 
@@ -272,9 +295,10 @@ class TVQuranPlayer {
   onEnded() {
     if (this.repeatMode === 'one') {
       this.audio.currentTime = 0;
-      this.audio.play();
+      this.audio.play().catch(e => console.warn(e));
     } else if (this.repeatMode === 'all') {
-      this.nextTrack();
+      // Auto-transition to random surah when track ends
+      this.playRandomSurah();
     }
   }
 

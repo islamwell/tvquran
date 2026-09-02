@@ -10,7 +10,7 @@ class TVQuranApp {
     this.currentLanguage = savedLanguage === 'ar' ? 'ur' : (savedLanguage || 'en');
     if (!this.supportedLanguages.includes(this.currentLanguage)) this.currentLanguage = 'en';
     this.currentTheme = localStorage.getItem('tvquran_theme') || 'dark';
-    this.currentReciterId = 'alafasy';
+    this.currentReciterId = 'idris-abkar';
     this.currentView = 'home';
     this.currentCollectionCategory = 'all';
     this.currentSlideIndex = 0;
@@ -38,6 +38,29 @@ class TVQuranApp {
     // Initial Render
     this.renderAllViews();
     this.mushaf.init();
+
+    // Auto-play Surah 6 (Al-An'am) from Idris Abkar on site entry, followed by random surahs
+    this.initSiteAutoPlay();
+  }
+
+  initSiteAutoPlay() {
+    this.currentReciterId = 'idris-abkar';
+    this.player.isAutoRandomNext = true;
+    
+    // Start auto playback with Surah 6 by Idris Abkar
+    this.player.playSurah('idris-abkar', 6);
+
+    // If browser Autoplay policy temporarily delays unmuted audio before user gesture,
+    // trigger audio seamlessly on the very first touch/click/key interaction.
+    const startAudioOnFirstInteraction = () => {
+      if (this.player.audio && this.player.audio.paused) {
+        this.player.audio.play().catch(err => console.warn('Interaction autoplay attempt:', err));
+      }
+    };
+
+    ['click', 'touchstart', 'keydown', 'pointerdown'].forEach(evt => {
+      document.addEventListener(evt, startAudioOnFirstInteraction, { once: true, capture: true, passive: true });
+    });
   }
 
   // Hero Slider Carousel (4 Slides with Progress Indicators)
