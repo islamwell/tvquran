@@ -84,8 +84,11 @@ class TVQuranMushaf {
               <button class="verse-action-btn btn-tafsir-toggle" onclick="window.tvquranMushaf.toggleTafsir(${surahId}, ${v.ayah})">
                 <i class="fa fa-book"></i> <span>${app.t('tafsir')}</span>
               </button>
-              <button class="verse-action-btn btn-copy-verse" onclick="window.tvquranMushaf.copyVerse('${v.text_ar}', '${surahMeta.name_ar}', ${v.ayah})">
+              <button class="verse-action-btn btn-copy-verse" onclick="window.tvquranMushaf.copyVerse('${v.text_ar}', '${surahMeta.name_ar}', ${v.ayah})" title="نسخ الآية">
                 <i class="fa fa-copy"></i>
+              </button>
+              <button class="verse-action-btn btn-share-verse" onclick="window.tvquranMushaf.shareVerse(${surahId}, ${v.ayah}, '${v.text_ar}', '${surahMeta.name_ar}')" title="${app.t('share')}">
+                <i class="fa fa-share-alt"></i>
               </button>
             </div>
           </div>
@@ -107,6 +110,9 @@ class TVQuranMushaf {
               <button class="verse-action-btn" onclick="window.tvquranApp.playSurahWithCurrentReciter(${surahId})">
                 <i class="fa fa-play"></i> <span>${app.t('full_audio')}</span>
               </button>
+              <button class="verse-action-btn" onclick="window.tvquranApp.shareSurahWithCurrentReciter(${surahId}, event)" title="${app.t('share')}">
+                <i class="fa fa-share-alt"></i> <span>${app.t('share')}</span>
+              </button>
             </div>
           </div>
           <p class="verse-arabic-text" style="font-size: ${this.fontSize}px;">
@@ -127,12 +133,25 @@ class TVQuranMushaf {
 
   playVerse(surahId, ayah) {
     if (this.player) {
-      this.player.playSurah('alafasy', surahId);
+      this.player.playSurah(window.tvquranApp.currentReciterId || 'idris-abkar', surahId);
       // Highlight the verse
       document.querySelectorAll('.verse-block').forEach(el => el.classList.remove('active-playing'));
       const activeEl = document.getElementById(`verse-${surahId}-${ayah}`);
       if (activeEl) activeEl.classList.add('active-playing');
     }
+  }
+
+  shareVerse(surahId, ayah, text, surahName) {
+    const app = window.tvquranApp;
+    const track = {
+      id: `verse-${surahId}-${ayah}`,
+      title_ar: `سورة ${surahName} [آية ${ayah}]`,
+      title_en: `Surah ${surahName} [Ayah ${ayah}]`,
+      reciter_ar: app.t('listen_now'),
+      reciter_en: 'Recitation & Tafsir',
+      url: window.TVQURAN_DATA.getSurahAudioUrl(app.currentReciterId || 'idris-abkar', surahId)
+    };
+    app.openShareModal(track);
   }
 
   toggleTafsir(surahId, ayah) {
@@ -143,7 +162,7 @@ class TVQuranMushaf {
   }
 
   copyVerse(text, surahName, ayah) {
-    const formatted = `﴿ ${text} ﴾ [سورة ${surahName}: ${ayah}] - عبر موقع tvQuran.com`;
+    const formatted = `﴿ ${text} ﴾ [سورة ${surahName}: ${ayah}] - عبر موقع NQuran.com`;
     navigator.clipboard.writeText(formatted).then(() => {
       alert(window.tvquranApp.t('copy_verse_success'));
     });

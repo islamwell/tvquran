@@ -148,6 +148,9 @@
                 <button class="btn-secondary" onclick="window.tvquranApp.openReciterProfile('khalid-jalil')">
                   <i class="fa fa-user"></i> <span>تلاوات خالد الجليل</span>
                 </button>
+                <button class="btn-secondary" onclick="window.tvquranApp.openShareModal(window.TVQURAN_DATA.collections[0].tracks[0])" title="مشاركة التلاوة">
+                  <i class="fa fa-share-alt"></i>
+                </button>
               </div>
             </div>
 
@@ -184,6 +187,9 @@
                 <button class="btn-secondary" onclick="window.tvquranApp.openReciterProfile('islam-sobhi')">
                   <i class="fa fa-user"></i> <span>تلاوات إسلام صبحي</span>
                 </button>
+                <button class="btn-secondary" onclick="window.tvquranApp.openShareModal(window.TVQURAN_DATA.collections[0].tracks[3])" title="مشاركة التلاوة">
+                  <i class="fa fa-share-alt"></i>
+                </button>
               </div>
             </div>
 
@@ -219,6 +225,9 @@
                 </button>
                 <button class="btn-secondary" onclick="window.tvquranApp.openReciterProfile('dosari')">
                   <i class="fa fa-user"></i> <span>تلاوات ياسر الدوسري</span>
+                </button>
+                <button class="btn-secondary" onclick="window.tvquranApp.openShareModal(window.TVQURAN_DATA.collections[0].tracks[2])" title="مشاركة التلاوة">
+                  <i class="fa fa-share-alt"></i>
                 </button>
               </div>
             </div>
@@ -373,6 +382,9 @@
             <button class="btn-icon-sm" id="btnMushafFontMinus" title="تصغير الخط"><i class="fa fa-minus"></i></button>
             <button class="btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;" onclick="window.tvquranApp.playSurahWithCurrentReciter(window.tvquranMushaf.currentSurahId)">
               <i class="fa fa-play"></i> <span data-i18n="listen_now">استمع للسورة</span>
+            </button>
+            <button class="btn-icon-sm" onclick="window.tvquranApp.shareSurahWithCurrentReciter(window.tvquranMushaf.currentSurahId)" title="مشاركة السورة">
+              <i class="fa fa-share-alt"></i>
             </button>
           </div>
         </div>
@@ -571,6 +583,9 @@
         <button class="player-fav-btn" id="playerFavBtn" title="إضافة للمفضلة">
           <i class="fa fa-heart-o"></i>
         </button>
+        <button class="player-share-btn" id="playerShareBtn" onclick="window.tvquranApp.openShareModal()" title="مشاركة التلاوة">
+          <i class="fa fa-share-alt"></i>
+        </button>
       </div>
 
       <!-- Center Column: Controls & Visualizer -->
@@ -641,7 +656,10 @@
   <div class="fullscreen-player-modal" id="fullscreenPlayerModal">
     <div class="fullscreen-top-bar">
       <h4><i class="fa fa-headphones" style="color:var(--accent-emerald);"></i> NQuran Audio Player</h4>
-      <button class="dialog-close-btn" id="fsCloseBtn"><i class="fa fa-times"></i></button>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <button class="control-btn" onclick="window.tvquranApp.openShareModal()" title="مشاركة التلاوة"><i class="fa fa-share-alt"></i></button>
+        <button class="dialog-close-btn" id="fsCloseBtn"><i class="fa fa-times"></i></button>
+      </div>
     </div>
 
     <div class="fullscreen-center-art">
@@ -727,7 +745,7 @@
       <!-- Version Indicator (Mandatory System Rule) -->
       <div class="footer-version-badge">
         <i class="fa fa-code-fork"></i>
-        <span>v1.0.8 (updated 2026-09-02 14:00)</span>
+        <span>v1.0.9 (updated 2026-09-02 18:03)</span>
       </div>
     </div>
   </footer>
@@ -772,23 +790,44 @@
 
   <!-- 3. Share & Embed Code Modal -->
   <dialog id="shareModal">
-    <div class="dialog-box">
+    <div class="dialog-box" style="max-width: 500px;">
       <div class="dialog-header">
         <h3 data-i18n="modal_share_title">مشاركة التلاوة أو تضمينها</h3>
         <button class="dialog-close-btn"><i class="fa fa-times"></i></button>
       </div>
-      <div style="margin-bottom: 1.5rem;">
+      
+      <div id="shareModalTrackTitle" style="font-size: 0.95rem; font-weight: 700; color: var(--accent-emerald); margin-bottom: 1.25rem; padding: 0.6rem 0.85rem; background: rgba(16, 185, 129, 0.1); border-radius: var(--radius-sm); border: 1px solid rgba(16, 185, 129, 0.2);">
+        سورة الأنعام - إدريس أبكر
+      </div>
+
+      <!-- Quick Social Sharing Row -->
+      <div style="display: flex; gap: 0.6rem; margin-bottom: 1.4rem; flex-wrap: wrap;">
+        <button class="btn-secondary" style="flex: 1; justify-content: center; gap: 0.4rem; background: rgba(37, 211, 102, 0.15); border-color: rgba(37, 211, 102, 0.35); color: #25d366;" onclick="window.tvquranApp.shareToWhatsApp()">
+          <i class="fa fa-whatsapp"></i> <span>WhatsApp</span>
+        </button>
+        <button class="btn-secondary" style="flex: 1; justify-content: center; gap: 0.4rem; background: rgba(0, 136, 204, 0.15); border-color: rgba(0, 136, 204, 0.35); color: #0088cc;" onclick="window.tvquranApp.shareToTelegram()">
+          <i class="fa fa-telegram"></i> <span>Telegram</span>
+        </button>
+        <button class="btn-secondary" style="flex: 1; justify-content: center; gap: 0.4rem; background: rgba(29, 161, 242, 0.15); border-color: rgba(29, 161, 242, 0.35); color: #1da1f2;" onclick="window.tvquranApp.shareToTwitter()">
+          <i class="fa fa-twitter"></i> <span>X / Twitter</span>
+        </button>
+        <button class="btn-secondary" style="flex: 1; justify-content: center; gap: 0.4rem;" onclick="window.tvquranApp.shareNative()">
+          <i class="fa fa-share-alt"></i> <span data-i18n="share">مشاركة</span>
+        </button>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
         <label style="font-size: 0.82rem; color: var(--text-muted); display: block; margin-bottom: 0.4rem;">رابط الاستماع المباشر (Direct Link):</label>
         <div style="display: flex; gap: 0.5rem;">
           <input type="text" id="shareDirectUrlInput" class="mushaf-select" style="flex: 1;" readonly>
-          <button class="btn-primary" onclick="window.tvquranApp.copyInputVal('shareDirectUrlInput')"><i class="fa fa-copy"></i></button>
+          <button class="btn-primary" onclick="window.tvquranApp.copyInputVal('shareDirectUrlInput')" title="نسخ الرابط"><i class="fa fa-copy"></i></button>
         </div>
       </div>
       <div>
         <label style="font-size: 0.82rem; color: var(--text-muted); display: block; margin-bottom: 0.4rem;" data-i18n="embed_code">كود التضمين للمواقع والمدونات (Embed iFrame):</label>
         <div style="display: flex; gap: 0.5rem;">
-          <textarea id="shareEmbedCodeInput" class="mushaf-select" style="flex: 1; height: 75px; resize: none;" readonly></textarea>
-          <button class="btn-primary" onclick="window.tvquranApp.copyInputVal('shareEmbedCodeInput')"><i class="fa fa-copy"></i></button>
+          <textarea id="shareEmbedCodeInput" class="mushaf-select" style="flex: 1; height: 70px; resize: none;" readonly></textarea>
+          <button class="btn-primary" onclick="window.tvquranApp.copyInputVal('shareEmbedCodeInput')" title="نسخ الكود"><i class="fa fa-copy"></i></button>
         </div>
       </div>
     </div>

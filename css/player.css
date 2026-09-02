@@ -169,15 +169,28 @@
   text-overflow: ellipsis;
 }
 
-.player-fav-btn {
-  font-size: 1.1rem;
+.player-fav-btn, .player-share-btn {
+  font-size: 1.05rem;
   color: var(--text-muted);
   transition: all var(--transition-fast);
-  margin-inline-start: 0.5rem;
+  margin-inline-start: 0.4rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .player-fav-btn:hover, .player-fav-btn.active {
   color: #ef4444;
+  transform: scale(1.15);
+}
+
+.player-share-btn:hover {
+  color: var(--accent-emerald);
   transform: scale(1.15);
 }
 

@@ -429,6 +429,9 @@ class TVQuranApp {
             <button class="btn-icon-sm" onclick="window.tvquranApp.openMushafSurah(${s.id})" title="${this.t('read_mushaf')}">
               <i class="fa fa-book"></i>
             </button>
+            <button class="btn-icon-sm" onclick="window.tvquranApp.shareSurahWithCurrentReciter(${s.id}, event)" title="${this.t('share')}">
+              <i class="fa fa-share-alt"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -643,7 +646,10 @@ class TVQuranApp {
               <div style="font-size:0.75rem;color:var(--text-muted);">${s.verses} ${this.t('verses_count')} • ${this.surahType(s.type)}</div>
             </div>
           </div>
-          <button class="btn-icon-sm"><i class="fa fa-play"></i></button>
+          <div style="display:flex;gap:0.35rem;align-items:center;">
+            <button class="btn-icon-sm" onclick="window.tvquranApp.shareSurahByReciter('${reciter.id}', ${s.id}, event)" title="${this.t('share')}"><i class="fa fa-share-alt"></i></button>
+            <button class="btn-icon-sm" title="${this.t('listen')}"><i class="fa fa-play"></i></button>
+          </div>
         </div>
       `).join('');
     }
@@ -713,7 +719,10 @@ class TVQuranApp {
           resultsHtml += matchSurahs.map(s => `
             <div class="search-item" onclick="window.tvquranApp.playSurahWithCurrentReciter(${s.id}); document.getElementById('searchModal').close();">
               <span>${s.id}. ${this.surahName(s)}</span>
-              <button class="btn-icon-sm"><i class="fa fa-play"></i></button>
+              <div style="display:flex;gap:0.35rem;align-items:center;">
+                <button class="btn-icon-sm" onclick="event.stopPropagation(); window.tvquranApp.shareSurahWithCurrentReciter(${s.id});" title="${this.t('share')}"><i class="fa fa-share-alt"></i></button>
+                <button class="btn-icon-sm" title="${this.t('listen')}"><i class="fa fa-play"></i></button>
+              </div>
             </div>
           `).join('');
         }
@@ -723,7 +732,10 @@ class TVQuranApp {
           resultsHtml += matchUrdu.map(l => `
             <div class="search-item" onclick='window.tvquranPlayer.playTrack(${JSON.stringify(l).replace(/'/g, "&#39;")}); document.getElementById("searchModal").close();'>
               <span><i class="fa fa-graduation-cap" style="color:var(--accent-gold);margin-left:5px;"></i> ${this.content(l, 'title')}</span>
-              <button class="btn-icon-sm"><i class="fa fa-play"></i></button>
+              <div style="display:flex;gap:0.35rem;align-items:center;">
+                <button class="btn-icon-sm" onclick="event.stopPropagation(); window.tvquranApp.openShareModalById('${l.id}');" title="${this.t('share')}"><i class="fa fa-share-alt"></i></button>
+                <button class="btn-icon-sm" title="${this.t('play')}"><i class="fa fa-play"></i></button>
+              </div>
             </div>
           `).join('');
         }
@@ -766,18 +778,100 @@ class TVQuranApp {
     }
   }
 
+  // Surah Sharing Helpers
+  shareSurahWithCurrentReciter(surahId, event) {
+    if (event) event.stopPropagation();
+    this.shareSurahByReciter(this.currentReciterId || 'idris-abkar', surahId, event);
+  }
+
+  shareSurahByReciter(reciterId, surahId, event) {
+    if (event) event.stopPropagation();
+    const surahNum = Number(surahId);
+    const surah = window.TVQURAN_DATA.surahs.find(s => s.id === surahNum) || window.TVQURAN_DATA.surahs[0];
+    const reciter = window.TVQURAN_DATA.reciters.find(r => r.id === reciterId) || window.TVQURAN_DATA.reciters[0];
+    const url = window.TVQURAN_DATA.getSurahAudioUrl(reciter.id, surah.id);
+
+    const track = {
+      id: `surah-${reciter.id}-${surah.id}`,
+      title_ar: `سورة ${surah.name_ar}`,
+      title_en: `Surah ${surah.name_en}`,
+      reciter_ar: reciter.name_ar,
+      reciter_en: reciter.name_en,
+      surah_id: surah.id,
+      reciter_id: reciter.id,
+      url: url,
+      audio_url: url,
+      cover: reciter.avatar
+    };
+
+    this.openShareModal(track);
+  }
+
   // Share & Embed Modal
-  openShareModal(track) {
+  openShareModal(track = null) {
+    const targetTrack = track || this.player.currentTrack || {
+      id: 'surah-idris-abkar-6',
+      title_ar: 'سورة الأنعام',
+      title_en: 'Surah Al-An\'am',
+      reciter_ar: 'إدريس أبكر',
+      reciter_en: 'Idris Abkar',
+      url: 'https://server6.mp3quran.net/abkr/006.mp3'
+    };
+
     const modal = document.getElementById('shareModal');
     const urlInput = document.getElementById('shareDirectUrlInput');
     const embedInput = document.getElementById('shareEmbedCodeInput');
+    const titleEl = document.getElementById('shareModalTrackTitle');
     
-    const trackUrl = track.url || window.location.href;
-    const embedCode = `<iframe src="https://tvquran.com/embed?track=${encodeURIComponent(track.id || track.url)}" width="100%" height="220" frameborder="0" allow="autoplay" allowtransparency="true"></iframe>`;
+    const isAr = this.currentLanguage === 'ar';
+    const trackTitle = this.content(targetTrack, 'title') || (isAr ? targetTrack.title_ar : targetTrack.title_en) || 'NQuran';
+    const trackReciter = this.content(targetTrack, 'reciter') || (isAr ? targetTrack.reciter_ar : targetTrack.reciter_en) || '';
+    const trackUrl = targetTrack.url || targetTrack.audio_url || window.location.href;
+    const embedCode = `<iframe src="https://tvquran.pages.dev/embed?track=${encodeURIComponent(targetTrack.id || trackUrl)}" width="100%" height="220" frameborder="0" allow="autoplay" allowtransparency="true"></iframe>`;
 
+    if (titleEl) {
+      titleEl.textContent = trackReciter ? `${trackTitle} - ${trackReciter}` : trackTitle;
+    }
     if (urlInput) urlInput.value = trackUrl;
     if (embedInput) embedInput.value = embedCode;
+
+    this.currentSharingTrack = {
+      title: trackReciter ? `${trackTitle} - ${trackReciter}` : trackTitle,
+      url: trackUrl
+    };
+
     if (modal) modal.showModal();
+  }
+
+  shareToWhatsApp() {
+    if (!this.currentSharingTrack) return;
+    const text = encodeURIComponent(`استمع إلى: ${this.currentSharingTrack.title}\n${this.currentSharingTrack.url}\nعبر منصة NQuran`);
+    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank', 'noopener,noreferrer');
+  }
+
+  shareToTelegram() {
+    if (!this.currentSharingTrack) return;
+    const text = encodeURIComponent(this.currentSharingTrack.title);
+    const url = encodeURIComponent(this.currentSharingTrack.url);
+    window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank', 'noopener,noreferrer');
+  }
+
+  shareToTwitter() {
+    if (!this.currentSharingTrack) return;
+    const text = encodeURIComponent(`استمع إلى ${this.currentSharingTrack.title} عبر منصة NQuran\n${this.currentSharingTrack.url}`);
+    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank', 'noopener,noreferrer');
+  }
+
+  shareNative() {
+    if (navigator.share && this.currentSharingTrack) {
+      navigator.share({
+        title: this.currentSharingTrack.title,
+        text: `استمع إلى ${this.currentSharingTrack.title} - NQuran`,
+        url: this.currentSharingTrack.url
+      }).catch(err => console.log('Share dismissed or cancelled', err));
+    } else {
+      this.copyInputVal('shareDirectUrlInput');
+    }
   }
 
   copyInputVal(inputId) {
