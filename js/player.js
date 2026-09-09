@@ -207,8 +207,8 @@ class TVQuranPlayer {
 
     const track = {
       id: `surah-${reciter.id}-${surah.id}`,
-      title_ar: `سورة ${surah.name_ar}`,
-      title_ur: `سورۃ ${surah.name_ar}`,
+      title_ar: surah.name_ar,
+      title_ur: surah.name_ar,
       title_en: `Surah ${surah.name_en}`,
       reciter_ar: reciter.name_ar,
       reciter_ur: reciter.name_ar,
@@ -223,8 +223,8 @@ class TVQuranPlayer {
     // Construct full surah queue for this reciter
     const fullQueue = window.TVQURAN_DATA.surahs.map(s => ({
       id: `surah-${reciter.id}-${s.id}`,
-      title_ar: `سورة ${s.name_ar}`,
-      title_ur: `سورۃ ${s.name_ar}`,
+      title_ar: s.name_ar,
+      title_ur: s.name_ar,
       title_en: `Surah ${s.name_en}`,
       reciter_ar: reciter.name_ar,
       reciter_ur: reciter.name_ar,

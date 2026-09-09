@@ -65,7 +65,7 @@ class TVQuranMushaf {
 
     if (this.surahSelect) this.surahSelect.value = surahId;
     if (this.surahOrnamentTitle) {
-      this.surahOrnamentTitle.textContent = `${app.t('surah_prefix')} ${app.surahName(surahMeta)}`;
+      this.surahOrnamentTitle.textContent = app.surahName(surahMeta);
     }
 
     // Check if we have sample verses data in mushaf_samples
@@ -117,7 +117,7 @@ class TVQuranMushaf {
           </div>
           <p class="verse-arabic-text" style="font-size: ${this.fontSize}px;">
             بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ <br>
-            ${app.t('full_audio_available')} ${app.t('surah_prefix')} ${app.surahName(surahMeta)}.
+            ${app.t('full_audio_available')} ${app.surahName(surahMeta)}.
           </p>
           <p class="verse-translation-text">
             ${app.t('total_verses_label')}: ${surahMeta.verses} | ${app.t('revelation')}: ${app.surahType(surahMeta.type)} | ${app.t('juzz')}: ${surahMeta.juzz}
@@ -145,7 +145,7 @@ class TVQuranMushaf {
     const app = window.tvquranApp;
     const track = {
       id: `verse-${surahId}-${ayah}`,
-      title_ar: `سورة ${surahName} [آية ${ayah}]`,
+      title_ar: `${surahName} [آية ${ayah}]`,
       title_en: `Surah ${surahName} [Ayah ${ayah}]`,
       reciter_ar: app.t('listen_now'),
       reciter_en: 'Recitation & Tafsir',
@@ -162,7 +162,7 @@ class TVQuranMushaf {
   }
 
   copyVerse(text, surahName, ayah) {
-    const formatted = `﴿ ${text} ﴾ [سورة ${surahName}: ${ayah}] - عبر موقع NQuran.com`;
+    const formatted = `﴿ ${text} ﴾ [${surahName}: ${ayah}] - عبر موقع NQuran.com`;
     navigator.clipboard.writeText(formatted).then(() => {
       alert(window.tvquranApp.t('copy_verse_success'));
     });

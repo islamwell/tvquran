@@ -796,7 +796,7 @@ class TVQuranApp {
 
     const track = {
       id: `surah-${reciter.id}-${surah.id}`,
-      title_ar: `سورة ${surah.name_ar}`,
+      title_ar: surah.name_ar,
       title_en: `Surah ${surah.name_en}`,
       reciter_ar: reciter.name_ar,
       reciter_en: reciter.name_en,
@@ -814,7 +814,7 @@ class TVQuranApp {
   openShareModal(track = null) {
     const targetTrack = track || this.player.currentTrack || {
       id: 'surah-idris-abkar-6',
-      title_ar: 'سورة الأنعام',
+      title_ar: 'الأنعام',
       title_en: 'Surah Al-An\'am',
       reciter_ar: 'إدريس أبكر',
       reciter_en: 'Idris Abkar',

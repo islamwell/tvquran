@@ -527,7 +527,7 @@ const TVQURAN_DATA = {
       tracks: [
         {
           id: "emo-1",
-          title_ar: "سورة ق [16-35] - خالد الجليل",
+          title_ar: "ق [16-35] - خالد الجليل",
           title_en: "Surah Qaf [16-35] - Khalid Al-Jalil",
           reciter_ar: "خالد الجليل",
           reciter_en: "Khalid Al-Jalil",
@@ -538,7 +538,7 @@ const TVQURAN_DATA = {
         },
         {
           id: "emo-2",
-          title_ar: "سورة النمل [59-65] - منصور السالمي",
+          title_ar: "النمل [59-65] - منصور السالمي",
           title_en: "Surah An-Naml [59-65] - Mansour Al-Salmi",
           reciter_ar: "منصور السالمي",
           reciter_en: "Mansour Al-Salmi",
@@ -549,7 +549,7 @@ const TVQURAN_DATA = {
         },
         {
           id: "emo-3",
-          title_ar: "سورة الفرقان [63-77] - ياسر الدوسري",
+          title_ar: "الفرقان [63-77] - ياسر الدوسري",
           title_en: "Surah Al-Furqan [63-77] - Yasser Al-Dosari",
           reciter_ar: "ياسر الدوسري",
           reciter_en: "Yasser Al-Dosari",
@@ -560,7 +560,7 @@ const TVQURAN_DATA = {
         },
         {
           id: "emo-4",
-          title_ar: "سورة الرحمن - إسلام صبحي",
+          title_ar: "الرحمن - إسلام صبحي",
           title_en: "Surah Ar-Rahman - Islam Sobhi",
           reciter_ar: "إسلام صبحي",
           reciter_en: "Islam Sobhi",
@@ -571,7 +571,7 @@ const TVQURAN_DATA = {
         },
         {
           id: "emo-5",
-          title_ar: "سورة الكهف - هزاع البلوشي",
+          title_ar: "الكهف - هزاع البلوشي",
           title_en: "Surah Al-Kahf - Hazza Al-Balushi",
           reciter_ar: "هزاع البلوشي",
           reciter_en: "Hazza Al-Balushi",
@@ -665,7 +665,7 @@ const TVQURAN_DATA = {
         },
         {
           id: "dhk-3",
-          title_ar: "أذكار النوم وسورة الملك - ماهر المعيقلي",
+          title_ar: "أذكار النوم والملك - ماهر المعيقلي",
           title_en: "Sleep Dhikr & Surah Al-Mulk - Maher Al-Muaiqly",
           reciter_ar: "ماهر المعيقلي",
           reciter_en: "Maher Al-Muaiqly",
@@ -690,7 +690,7 @@ const TVQURAN_DATA = {
       tracks: [
         {
           id: "rar-1",
-          title_ar: "سورة مريم - عبد الباسط عبد الصمد (تسجيل نادر من سوريا 1956)",
+          title_ar: "مريم - عبد الباسط عبد الصمد (تسجيل نادر من سوريا 1956)",
           title_en: "Surah Maryam - Abdul Basit (Syria 1956)",
           reciter_ar: "عبد الباسط عبد الصمد",
           reciter_en: "Abdul Basit Abdul Samad",
@@ -701,7 +701,7 @@ const TVQURAN_DATA = {
         },
         {
           id: "rar-2",
-          title_ar: "سورة الحشر - محمد صديق المنشاوي (من المسجد الأقصى)",
+          title_ar: "الحشر - محمد صديق المنشاوي (من المسجد الأقصى)",
           title_en: "Surah Al-Hashr - Minshawi (Al-Aqsa Mosque)",
           reciter_ar: "محمد صديق المنشاوي",
           reciter_en: "Mohamed Siddiq El-Minshawi",
@@ -712,7 +712,7 @@ const TVQURAN_DATA = {
         },
         {
           id: "rar-3",
-          title_ar: "سورة النجم والقمر - مصطفى إسماعيل",
+          title_ar: "النجم والقمر - مصطفى إسماعيل",
           title_en: "Surah An-Najm & Al-Qamar - Mustafa Ismail",
           reciter_ar: "مصطفى إسماعيل",
           reciter_en: "Mustafa Ismail",
@@ -829,9 +829,9 @@ const TVQURAN_DATA = {
   urdu_lectures: [
     {
       id: "urdu-1",
-      title_ar: "تفسير سورة الفاتحة (الآيات 1-3) - أسرار الفاتحة",
+      title_ar: "تفسير الفاتحة (الآيات 1-3) - أسرار الفاتحة",
       title_en: "Tafseer Surah Al-Fatihah (Verses 1-3) - Secrets of Opening Chapter",
-      title_ur: "تفسیر سورۃ الفاتحہ (آیات 1-3) - نور القرآن",
+      title_ur: "تفسیر الفاتحہ (آیات 1-3) - نور القرآن",
       reciter_ar: "الأستاذة عفت مقبول",
       reciter_en: "Ustadha Iffat Maqbool",
       riwayah_ar: "مؤسسة نور القرآن العالمية (NQ-International)",
@@ -843,14 +843,14 @@ const TVQURAN_DATA = {
       audio_url: "https://nq-international.com/wp-content/uploads/2014/10/D2-SurahAl-Fatiha1-3.mp3",
       cover: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500&auto=format&fit=crop&q=80",
       description_en: "Profound reflection on the opening verses of Surah Al-Fatihah, exploring Allah's mercy and guidance for every Muslim.",
-      description_ar: "تفسير وتدبر عميق في الآيات الأولى من سورة الفاتحة واستشعار عظمة الخالق ورحمته الواسعة.",
+      description_ar: "تفسير وتدبر عميق في الآيات الأولى من الفاتحة واستشعار عظمة الخالق ورحمته الواسعة.",
       source_url: "https://nq-international.com"
     },
     {
       id: "urdu-2",
-      title_ar: "تفسير سورة الفاتحة (الآيات 4-7) - حقيقة العبودية والاستعانة",
+      title_ar: "تفسير الفاتحة (الآيات 4-7) - حقيقة العبودية والاستعانة",
       title_en: "Tafseer Surah Al-Fatihah (Verses 4-7) - Worship & Straight Path",
-      title_ur: "تفسیر سورۃ الفاتحہ (آیات 4-7) - ایاک نعبد و ایاک نستعین",
+      title_ur: "تفسیر الفاتحہ (آیات 4-7) - ایاک نعبد و ایاک نستعین",
       reciter_ar: "الأستاذة عفت مقبول",
       reciter_en: "Ustadha Iffat Maqbool",
       riwayah_ar: "مؤسسة نور القرآن العالمية (NQ-International)",
@@ -886,9 +886,9 @@ const TVQURAN_DATA = {
     },
     {
       id: "urdu-4",
-      title_ar: "تفسير سورة البقرة (الآيات 1-7) - صفات المتقين ومفاتيح الفلاح",
+      title_ar: "تفسير البقرة (الآيات 1-7) - صفات المتقين ومفاتيح الفلاح",
       title_en: "Tafseer Surah Al-Baqarah (Verses 1-7) - Characteristics of Muttaqeen",
-      title_ur: "تفسیر سورۃ البقرۃ (آیات 1-7) - متقین کی صفات اور فلاح کے اصول",
+      title_ur: "تفسیر البقرۃ (آیات 1-7) - متقین کی صفات اور فلاح کے اصول",
       reciter_ar: "الأستاذة عفت مقبول",
       reciter_en: "Ustadha Iffat Maqbool",
       riwayah_ar: "مؤسسة نور القرآن العالمية (NQ-International)",
@@ -900,7 +900,7 @@ const TVQURAN_DATA = {
       audio_url: "https://nq-international.com/wp-content/uploads/Quran/Quran%20ki%20kirnein/Quran%20kiya%20hey/D4-SurahAl-Baqarah1-7.mp3",
       cover: "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=500&auto=format&fit=crop&q=80",
       description_en: "Detailed exegesis of the opening verses of Surah Al-Baqarah, belief in the Unseen, Salah, and the fruits of Taqwa.",
-      description_ar: "تفسير ميسر لأول سورة البقرة وبيان صفات أهل التقوى والإيمان بالغيب وإقامة الصلاة والإنفاق.",
+      description_ar: "تفسير ميسر لأول البقرة وبيان صفات أهل التقوى والإيمان بالغيب وإقامة الصلاة والإنفاق.",
       source_url: "https://nq-international.com"
     },
     {
@@ -924,9 +924,9 @@ const TVQURAN_DATA = {
     },
     {
       id: "urdu-6",
-      title_ar: "تفسير سورة يس - قلب القرآن وتذكرة البعث واليقين",
+      title_ar: "تفسير يس - قلب القرآن وتذكرة البعث واليقين",
       title_en: "Tafseer Surah Ya-Sin - The Heart of Quran & Awakening",
-      title_ur: "تفسیر سورۃ یٰس - قرآن کا دل، رسالت اور قیامت کا یقین",
+      title_ur: "تفسیر یٰس - قرآن کا دل، رسالت اور قیامت کا یقین",
       reciter_ar: "الأستاذة عفت مقبول",
       reciter_en: "Ustadha Iffat Maqbool",
       riwayah_ar: "مؤسسة نور القرآن العالمية (NQ-International)",
@@ -938,14 +938,14 @@ const TVQURAN_DATA = {
       audio_url: "https://nq-international.com/wp-content/uploads/Quran/Quran%20ki%20kirnein/Surah%20Yaseen/D7-SurahYaseen-R2-a.mp3",
       cover: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=500&auto=format&fit=crop&q=80",
       description_en: "A heartwarming journey through Surah Ya-Sin: strengthening our conviction in the Prophet's message and the Hereafter.",
-      description_ar: "تدبر إيماني في آيات سورة يس وتثبيت عقيدة التوحيد والرسالة والبعث بعد الموت في القلوب.",
+      description_ar: "تدبر إيماني في آيات يس وتثبيت عقيدة التوحيد والرسالة والبعث بعد الموت في القلوب.",
       source_url: "https://nq-international.com"
     },
     {
       id: "urdu-7",
-      title_ar: "تفسير سورة الواقعة - مشاهد يوم القيامة وأصناف الخلق",
+      title_ar: "تفسير الواقعة - مشاهد يوم القيامة وأصناف الخلق",
       title_en: "Tafseer Surah Al-Waqi'ah - Day of Judgement & Eternal Destiny",
-      title_ur: "تفسیر سورۃ الواقعہ - قیامت کا دن، اعمال اور انجام کی فکر",
+      title_ur: "تفسیر الواقعہ - قیامت کا دن، اعمال اور انجام کی فکر",
       reciter_ar: "الأستاذة عفت مقبول",
       reciter_en: "Ustadha Iffat Maqbool",
       riwayah_ar: "مؤسسة نور القرآن العالمية (NQ-International)",
@@ -962,9 +962,9 @@ const TVQURAN_DATA = {
     },
     {
       id: "urdu-8",
-      title_ar: "تفسير سورة الحجرات (الآيات 1-10) - الأخلاق القرآنية والآداب النبوية",
+      title_ar: "تفسير الحجرات (الآيات 1-10) - الأخلاق القرآنية والآداب النبوية",
       title_en: "Tafseer Surah Al-Hujurat (Verses 1-10) - Manners & Brotherhood",
-      title_ur: "تفسیر سورۃ الحجرات (آیات 1-10) - اخلاق نبوی اور اسلامی آداب",
+      title_ur: "تفسیر الحجرات (آیات 1-10) - اخلاق نبوی اور اسلامی آداب",
       reciter_ar: "الأستاذة عفت مقبول",
       reciter_en: "Ustadha Iffat Maqbool",
       riwayah_ar: "مؤسسة نور القرآن العالمية (NQ-International)",
