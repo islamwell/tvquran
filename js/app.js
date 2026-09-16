@@ -23,8 +23,57 @@ class TVQuranApp {
     window.tvquranApp = this;
     window.tvquranPlayer = this.player;
     window.tvquranMushaf = this.mushaf;
+    window.showToast = this.showToast.bind(this);
 
     this.init();
+  }
+
+  showToast(message, type = 'info', duration = 3500, action = null) {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'toast-container';
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+
+    let iconClass = 'fa fa-info-circle';
+    if (type === 'success') iconClass = 'fa fa-check-circle';
+    if (type === 'favorite') iconClass = 'fa fa-heart';
+    if (type === 'warning') iconClass = 'fa fa-exclamation-triangle';
+
+    let actionBtnHtml = '';
+    if (action && action.label) {
+      actionBtnHtml = `<button class="toast-action-btn">${action.label}</button>`;
+    }
+
+    toast.innerHTML = `
+      <i class="${iconClass} toast-icon"></i>
+      <div class="toast-content">${message}</div>
+      ${actionBtnHtml}
+    `;
+
+    if (action && action.onClick) {
+      const btn = toast.querySelector('.toast-action-btn');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          action.onClick();
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 300);
+        });
+      }
+    }
+
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('show'));
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
   }
 
   init() {
@@ -37,7 +86,13 @@ class TVQuranApp {
     
     // Initial Render
     this.renderAllViews();
+    this.renderCoursesGrid();
     this.mushaf.init();
+
+    // Register Service Worker for PWA & Offline Support
+    if ('serviceWorker' in navigator && (window.location.protocol.startsWith('http') || window.location.protocol.startsWith('https'))) {
+      navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW register info:', err));
+    }
 
     // Auto-play Surah 6 (Al-An'am) from Idris Abkar on site entry, followed by random surahs
     this.initSiteAutoPlay();
@@ -554,6 +609,70 @@ class TVQuranApp {
     }
   }
 
+  addLectureToQueue(id, event) {
+    if (event) event.stopPropagation();
+    const lecture = (window.TVQURAN_DATA.urdu_lectures || []).find(l => l.id === id);
+    if (lecture) {
+      this.player.addToQueue(lecture);
+    }
+  }
+
+  // NurulQuran Academy & Courses Grid (Featured Educational Program)
+  renderCoursesGrid() {
+    const container = document.getElementById('coursesGridContainer');
+    if (!container) return;
+
+    const isUrdu = this.currentLanguage === 'ur';
+    const courses = [
+      {
+        icon: 'fa fa-graduation-cap',
+        title: this.t('course_taleem'),
+        desc: isUrdu
+          ? 'استاذہ عفت مقبول کے ساتھ قرآن مجید کا ترجمہ، لفظی تفہیم، اور مفصل تفسیر پر مشتمل تدریسی و تربیتی کورس۔'
+          : 'Comprehensive translation, word-by-word analysis, and in-depth exegesis program guided by Ustadha Iffat Maqbool.',
+        link: 'https://www.nq-international.com'
+      },
+      {
+        icon: 'fa fa-microphone',
+        title: this.t('course_tajweed'),
+        desc: isUrdu
+          ? 'مخارج الحروف، صفات، اور قراءت کے بنیادی و اعلیٰ قواعد کی باقاعدہ مشق اور قراءتی تصحیح۔'
+          : 'Mastery of articulation points (Makharij), rules of recitation, and melodic precision.',
+        link: 'https://www.nq-international.com'
+      },
+      {
+        icon: 'fa fa-book',
+        title: this.t('course_arabic'),
+        desc: isUrdu
+          ? 'قرآنی الفاظ، صرف و نحو، اور گرائمر کے ذریعے کلام الٰہی کو براہِ راست سمجھنے کی باقاعدہ تربیت۔'
+          : 'Foundational and advanced Quranic grammar, morphology, and vocabulary.',
+        link: 'https://www.nq-international.com'
+      },
+      {
+        icon: 'fa fa-users',
+        title: this.t('course_webinars'),
+        desc: isUrdu
+          ? 'ہفتہ وار دروس، رمضان و حج کی خصوصی کلاسیں، اور فکری و اصلاحی مجالس۔'
+          : 'Weekly live Tafseer sessions, special seasonal programs, and spiritual enrichment classes.',
+        link: 'https://www.nq-international.com'
+      }
+    ];
+
+    container.innerHTML = courses.map(c => `
+      <div class="course-card">
+        <div>
+          <div class="course-icon-badge"><i class="${c.icon}"></i></div>
+          <h4>${c.title}</h4>
+          <p>${c.desc}</p>
+        </div>
+        <a href="${c.link}" target="_blank" rel="noopener" class="course-link-btn">
+          <span>${this.t('enroll_now')}</span>
+          <i class="fa fa-external-link"></i>
+        </a>
+      </div>
+    `).join('');
+  }
+
   // 6. Favorites & History
   renderFavoritesView() {
     const container = document.getElementById('favoritesTracksGrid');
@@ -826,11 +945,11 @@ class TVQuranApp {
     const embedInput = document.getElementById('shareEmbedCodeInput');
     const titleEl = document.getElementById('shareModalTrackTitle');
     
-    const isAr = this.currentLanguage === 'ar';
-    const trackTitle = this.content(targetTrack, 'title') || (isAr ? targetTrack.title_ar : targetTrack.title_en) || 'NQuran';
-    const trackReciter = this.content(targetTrack, 'reciter') || (isAr ? targetTrack.reciter_ar : targetTrack.reciter_en) || '';
+    const trackTitle = this.content(targetTrack, 'title') || targetTrack.title_ur || targetTrack.title_en || targetTrack.title_ar || 'NQuran';
+    const trackReciter = this.content(targetTrack, 'reciter') || targetTrack.reciter_ur || targetTrack.reciter_en || targetTrack.reciter_ar || '';
     const trackUrl = targetTrack.url || targetTrack.audio_url || window.location.href;
-    const embedCode = `<iframe src="https://tvquran.pages.dev/embed?track=${encodeURIComponent(targetTrack.id || trackUrl)}" width="100%" height="220" frameborder="0" allow="autoplay" allowtransparency="true"></iframe>`;
+    const embedOrigin = window.location.origin;
+    const embedCode = `<iframe src="${embedOrigin}/embed.html?track=${encodeURIComponent(targetTrack.id || trackUrl)}" width="100%" height="220" frameborder="0" allow="autoplay" allowtransparency="true"></iframe>`;
 
     if (titleEl) {
       titleEl.textContent = trackReciter ? `${trackTitle} - ${trackReciter}` : trackTitle;
@@ -848,20 +967,21 @@ class TVQuranApp {
 
   shareToWhatsApp() {
     if (!this.currentSharingTrack) return;
-    const text = encodeURIComponent(`استمع إلى: ${this.currentSharingTrack.title}\n${this.currentSharingTrack.url}\nعبر منصة NQuran`);
+    const prefix = this.currentLanguage === 'ur' ? 'سنیں:' : (this.currentLanguage === 'fr' ? 'Écoutez :' : (this.currentLanguage === 'no' ? 'Hør på:' : 'Listen to:'));
+    const text = encodeURIComponent(`${prefix} ${this.currentSharingTrack.title}\n${this.currentSharingTrack.url}\nNQuran • NurulQuran`);
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank', 'noopener,noreferrer');
   }
 
   shareToTelegram() {
     if (!this.currentSharingTrack) return;
-    const text = encodeURIComponent(this.currentSharingTrack.title);
+    const text = encodeURIComponent(`${this.currentSharingTrack.title} - NQuran`);
     const url = encodeURIComponent(this.currentSharingTrack.url);
     window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank', 'noopener,noreferrer');
   }
 
   shareToTwitter() {
     if (!this.currentSharingTrack) return;
-    const text = encodeURIComponent(`استمع إلى ${this.currentSharingTrack.title} عبر منصة NQuran\n${this.currentSharingTrack.url}`);
+    const text = encodeURIComponent(`${this.currentSharingTrack.title} | NQuran\n${this.currentSharingTrack.url}`);
     window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank', 'noopener,noreferrer');
   }
 
@@ -869,7 +989,7 @@ class TVQuranApp {
     if (navigator.share && this.currentSharingTrack) {
       navigator.share({
         title: this.currentSharingTrack.title,
-        text: `استمع إلى ${this.currentSharingTrack.title} - NQuran`,
+        text: `Listen to ${this.currentSharingTrack.title} - NQuran`,
         url: this.currentSharingTrack.url
       }).catch(err => console.log('Share dismissed or cancelled', err));
     } else {
@@ -882,7 +1002,7 @@ class TVQuranApp {
     if (input) {
       input.select();
       navigator.clipboard.writeText(input.value).then(() => {
-        alert(this.t('copied_link'));
+        this.showToast(this.t('copied_link'), 'success');
       });
     }
   }

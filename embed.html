@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NQuran Embed Player</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    :root {
+      --bg-dark: #0b0f17;
+      --bg-card: rgba(18, 24, 38, 0.95);
+      --accent-emerald: #10b981;
+      --accent-gold: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+    }
+    .embed-card {
+      width: 100%;
+      height: 100%;
+      max-width: 650px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+      position: relative;
+    }
+    .embed-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .embed-cover {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: #1e293b;
+      flex-shrink: 0;
+    }
+    .embed-meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .embed-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .embed-reciter {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .embed-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--accent-emerald);
+      text-decoration: none;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .embed-brand:hover {
+      background: rgba(16, 185, 129, 0.22);
+    }
+    .embed-scrubber-box {
+      margin: 0.5rem 0 0.25rem;
+    }
+    .scrubber-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .scrubber-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-emerald), var(--accent-gold));
+      border-radius: 9999px;
+      transition: width 0.1s linear;
+    }
+    .time-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+      direction: ltr;
+    }
+    .embed-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.25rem;
+    }
+    .btn-play-toggle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      color: #0b0f17;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+      transition: transform 0.15s, background 0.2s;
+    }
+    .btn-play-toggle:hover {
+      transform: scale(1.05);
+      background: #059669;
+    }
+    .volume-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .volume-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .volume-slider {
+      width: 70px;
+      accent-color: var(--accent-emerald);
+      cursor: pointer;
+    }
+    @media (max-width: 480px) {
+      .embed-card {
+        padding: 0.75rem;
+      }
+      .embed-cover {
+        width: 48px;
+        height: 48px;
+      }
+      .volume-slider {
+        width: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="embed-card">
+    <div class="embed-header">
+      <img id="trackCover" src="favicon.svg" alt="Cover" class="embed-cover">
+      <div class="embed-meta">
+        <div id="trackTitle" class="embed-title">الأنعام</div>
+        <div id="trackReciter" class="embed-reciter">إدريس أبكر</div>
+      </div>
+      <a href="https://tvquran.pages.dev" target="_blank" rel="noopener" class="embed-brand" title="Open NQuran">
+        <i class="fa fa-external-link"></i> NQuran
+      </a>
+    </div>
+
+    <div class="embed-scrubber-box">
+      <div class="scrubber-track" id="scrubberTrack">
+        <div class="scrubber-fill" id="scrubberFill"></div>
+      </div>
+      <div class="time-row">
+        <span id="currentTime">00:00</span>
+        <span id="durationTime">00:00</span>
+      </div>
+    </div>
+
+    <div class="embed-controls">
+      <div class="volume-box">
+        <button class="volume-btn" id="volBtn"><i class="fa fa-volume-up"></i></button>
+        <input type="range" min="0" max="1" step="0.05" value="0.9" class="volume-slider" id="volSlider">
+      </div>
+
+      <button class="btn-play-toggle" id="btnPlay" title="Play / Pause">
+        <i class="fa fa-play" id="playIcon"></i>
+      </button>
+
+      <div style="font-size:0.75rem; color:var(--text-muted);">
+        <i class="fa fa-heart" style="color:#ef4444;"></i> NurulQuran
+      </div>
+    </div>
+  </div>
+
+  <audio id="audioElement" preload="metadata"></audio>
+
+  <script src="js/data.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const audio = document.getElementById('audioElement');
+    const btnPlay = document.getElementById('btnPlay');
+    const playIcon = document.getElementById('playIcon');
+    const scrubberTrack = document.getElementById('scrubberTrack');
+    const scrubberFill = document.getElementById('scrubberFill');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationTimeEl = document.getElementById('durationTime');
+    const trackTitle = document.getElementById('trackTitle');
+    const trackReciter = document.getElementById('trackReciter');
+    const trackCover = document.getElementById('trackCover');
+    const volSlider = document.getElementById('volSlider');
+    const volBtn = document.getElementById('volBtn');
+
+    // Resolve track info from query params
+    let title = params.get('title');
+    let artist = params.get('artist') || params.get('reciter');
+    let audioUrl = params.get('audio') || params.get('url');
+    let coverUrl = params.get('cover');
+    const trackParam = params.get('track');
+
+    // If track ID given, try to find in data
+    if (trackParam && window.TVQURAN_DATA) {
+      if (trackParam.startsWith('urdu-')) {
+        const lecture = (window.TVQURAN_DATA.urdu_lectures || []).find(l => l.id === trackParam);
+        if (lecture) {
+          title = lecture.title_ar || lecture.title_ur || lecture.title_en;
+          artist = lecture.speaker_en || 'Ustadha Iffat Maqbool';
+          audioUrl = lecture.audio_url || lecture.url;
+          coverUrl = lecture.cover;
+        }
+      } else if (trackParam.startsWith('surah-')) {
+        const parts = trackParam.split('-');
+        if (parts.length >= 3) {
+          const reciterId = parts.slice(1, -1).join('-');
+          const surahId = parseInt(parts[parts.length - 1]);
+          const s = window.TVQURAN_DATA.surahs.find(x => x.id === surahId);
+          const r = window.TVQURAN_DATA.reciters.find(x => x.id === reciterId);
+          if (s && r) {
+            title = s.name_ar;
+            artist = r.name_ar;
+            audioUrl = window.TVQURAN_DATA.getSurahAudioUrl(r.id, s.id);
+            coverUrl = r.avatar;
+          }
+        }
+      } else if (trackParam.startsWith('http')) {
+        audioUrl = trackParam;
+      }
+    }
+
+    // Fallback default
+    title = title || 'الأنعام';
+    artist = artist || 'إدريس أبكر';
+    audioUrl = audioUrl || 'https://server6.mp3quran.net/abkr/006.mp3';
+    coverUrl = coverUrl || 'favicon.svg';
+
+    trackTitle.textContent = title;
+    trackReciter.textContent = artist;
+    trackCover.src = coverUrl;
+    audio.src = audioUrl;
+
+    // CDNs for Quran audio fallback
+    const fallbackCDNs = ['server6', 'server8', 'server10', 'server11'];
+    let cdnIndex = 0;
+    audio.addEventListener('error', () => {
+      if (audio.src && audio.src.includes('mp3quran.net')) {
+        cdnIndex++;
+        if (cdnIndex < fallbackCDNs.length) {
+          const newSrc = audio.src.replace(/server\d+/, fallbackCDNs[cdnIndex]);
+          console.log('Switching embed audio to mirror:', newSrc);
+          audio.src = newSrc;
+          audio.play().catch(e => console.warn(e));
+        }
+      }
+    });
+
+    function formatTime(secs) {
+      if (!secs || isNaN(secs)) return '00:00';
+      const m = Math.floor(secs / 60);
+      const s = Math.floor(secs % 60);
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    btnPlay.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play().catch(e => console.warn(e));
+      } else {
+        audio.pause();
+      }
+    });
+
+    audio.addEventListener('play', () => {
+      playIcon.className = 'fa fa-pause';
+    });
+
+    audio.addEventListener('pause', () => {
+      playIcon.className = 'fa fa-play';
+    });
+
+    audio.addEventListener('loadedmetadata', () => {
+      durationTimeEl.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      if (!audio.duration) return;
+      const pct = (audio.currentTime / audio.duration) * 100;
+      scrubberFill.style.width = `${pct}%`;
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    });
+
+    scrubberTrack.addEventListener('click', (e) => {
+      if (!audio.duration) return;
+      const rect = scrubberTrack.getBoundingClientRect();
+      const pos = (e.clientX - rect.left) / rect.width;
+      audio.currentTime = Math.max(0, Math.min(pos * audio.duration, audio.duration));
+    });
+
+    volSlider.addEventListener('input', (e) => {
+      audio.volume = parseFloat(e.target.value);
+      updateVolIcon();
+    });
+
+    volBtn.addEventListener('click', () => {
+      audio.muted = !audio.muted;
+      updateVolIcon();
+    });
+
+    function updateVolIcon() {
+      const icon = volBtn.querySelector('i');
+      if (audio.muted || audio.volume === 0) {
+        icon.className = 'fa fa-volume-off';
+      } else if (audio.volume < 0.5) {
+        icon.className = 'fa fa-volume-down';
+      } else {
+        icon.className = 'fa fa-volume-up';
+      }
+    }
+
+    if (params.get('autoplay') === '1') {
+      audio.play().catch(e => console.warn('Autoplay prevented:', e));
+    }
+  </script>
+</body>
+</html>

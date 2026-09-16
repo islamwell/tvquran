@@ -19,6 +19,11 @@ class TVQuranPlayer {
     this.favorites = this.readStoredArray('tvquran_favorites');
     this.history = this.readStoredArray('tvquran_history');
 
+    // Multi-CDN Fallback & Progress Resumption
+    this.fallbackCDNs = ['server6', 'server8', 'server10', 'server11', 'server12'];
+    this.cdnFallbackAttempts = 0;
+    this.progressSaveThrottle = 0;
+
     this.initElements();
     this.initEvents();
     this.initVisualizer();
@@ -55,6 +60,10 @@ class TVQuranPlayer {
     this.btnRepeat = document.getElementById('btnRepeat');
     this.btnShuffle = document.getElementById('btnShuffle');
     this.btnFav = document.getElementById('playerFavBtn');
+    this.btnQueue = document.getElementById('playerQueueBtn');
+    this.queueDrawer = document.getElementById('queueDrawer');
+    this.queueListEl = document.getElementById('queueItemsList');
+    this.btnClearQueue = document.getElementById('btnClearQueue');
     
     this.scrubber = document.getElementById('playerScrubber');
     this.progressFill = document.getElementById('playerProgressFill');
@@ -95,6 +104,7 @@ class TVQuranPlayer {
     this.audio.addEventListener('timeupdate', () => this.onTimeUpdate());
     this.audio.addEventListener('progress', () => this.onProgress());
     this.audio.addEventListener('ended', () => this.onEnded());
+    this.audio.addEventListener('error', (e) => this.handleAudioError(e));
     this.audio.addEventListener('loadedmetadata', () => {
       if (this.durationTimeEl) this.durationTimeEl.textContent = this.formatTime(this.audio.duration);
       if (this.fsDurationTime) this.fsDurationTime.textContent = this.formatTime(this.audio.duration);
@@ -108,6 +118,22 @@ class TVQuranPlayer {
     if (this.btnRepeat) this.btnRepeat.addEventListener('click', () => this.cycleRepeatMode());
     if (this.btnShuffle) this.btnShuffle.addEventListener('click', () => this.toggleShuffle());
     if (this.btnFav) this.btnFav.addEventListener('click', () => this.toggleFavoriteCurrent());
+    if (this.btnQueue) {
+      this.btnQueue.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleQueueDrawer();
+      });
+    }
+    if (this.btnClearQueue) {
+      this.btnClearQueue.addEventListener('click', () => this.clearQueue());
+    }
+    document.addEventListener('click', (e) => {
+      if (this.queueDrawer && this.queueDrawer.classList.contains('active')) {
+        if (!this.queueDrawer.contains(e.target) && !this.btnQueue?.contains(e.target)) {
+          this.queueDrawer.classList.remove('active');
+        }
+      }
+    });
 
     // Seeking
     if (this.scrubber) {
@@ -165,6 +191,7 @@ class TVQuranPlayer {
     if (!track) return;
     track.url = track.url || track.audio_url;
     this.currentTrack = track;
+    this.cdnFallbackAttempts = 0;
     
     if (queueList && Array.isArray(queueList)) {
       this.queue = queueList.map(t => {
@@ -187,6 +214,9 @@ class TVQuranPlayer {
     this.updateTrackMetaUI(track);
     this.checkIsFavorite(track);
 
+    // Check and resume previous progress if available
+    this.checkAndResumeTrackProgress(track);
+
     const playPromise = this.audio.play();
     if (playPromise !== undefined) {
       playPromise.catch(err => {
@@ -196,6 +226,67 @@ class TVQuranPlayer {
 
     this.addToHistory(track);
     this.updateMediaSession(track);
+    this.renderQueueDrawer();
+  }
+
+  // Audio stream error fallback across multi-CDN mirrors
+  handleAudioError(e) {
+    console.warn('Audio stream error encountered on source:', this.audio.src, e);
+    if (this.audio.src && this.audio.src.includes('mp3quran.net')) {
+      this.cdnFallbackAttempts++;
+      if (this.cdnFallbackAttempts < this.fallbackCDNs.length) {
+        const nextCdn = this.fallbackCDNs[this.cdnFallbackAttempts];
+        const newSrc = this.audio.src.replace(/server\d+/, nextCdn);
+        console.log(`Switching audio stream to fallback mirror (${nextCdn}):`, newSrc);
+        if (window.tvquranApp && typeof window.tvquranApp.showToast === 'function') {
+          window.tvquranApp.showToast(this.t('cdn_fallback_toast'), 'warning', 3500);
+        }
+        const currentTime = this.audio.currentTime || 0;
+        this.audio.src = newSrc;
+        this.audio.currentTime = currentTime;
+        this.audio.play().catch(err => console.warn('Fallback play delayed:', err));
+      }
+    }
+  }
+
+  // Playback Progress Resumption (Keyed by Track)
+  getTrackProgressKey(track) {
+    if (!track) return 'nquran_prog_current';
+    return 'nquran_prog_' + (track.id || track.url || '').replace(/[^a-zA-Z0-9_-]/g, '_');
+  }
+
+  saveTrackProgress() {
+    if (!this.currentTrack || !this.audio.duration || isNaN(this.audio.duration)) return;
+    const key = this.getTrackProgressKey(this.currentTrack);
+    if (this.audio.currentTime > 15 && this.audio.currentTime < this.audio.duration - 20) {
+      localStorage.setItem(key, Math.floor(this.audio.currentTime).toString());
+    } else if (this.audio.currentTime >= this.audio.duration - 20) {
+      localStorage.removeItem(key);
+    }
+  }
+
+  checkAndResumeTrackProgress(track) {
+    if (!track) return;
+    const key = this.getTrackProgressKey(track);
+    const savedSecs = parseInt(localStorage.getItem(key) || '0', 10);
+    if (savedSecs > 15) {
+      const formatted = this.formatTime(savedSecs);
+      this.audio.currentTime = savedSecs;
+      if (window.tvquranApp && typeof window.tvquranApp.showToast === 'function') {
+        window.tvquranApp.showToast(
+          `${this.t('resume_toast')} ${formatted}`,
+          'info',
+          5000,
+          {
+            label: this.t('restart_track'),
+            onClick: () => {
+              this.audio.currentTime = 0;
+              localStorage.removeItem(key);
+            }
+          }
+        );
+      }
+    }
   }
 
   // Play Surah by Reciter and Surah Number
@@ -293,12 +384,27 @@ class TVQuranPlayer {
   }
 
   onEnded() {
+    if (this.currentTrack) {
+      localStorage.removeItem(this.getTrackProgressKey(this.currentTrack));
+    }
     if (this.repeatMode === 'one') {
       this.audio.currentTime = 0;
       this.audio.play().catch(e => console.warn(e));
     } else if (this.repeatMode === 'all') {
-      // Auto-transition to random surah when track ends
-      this.playRandomSurah();
+      if (this.queue.length > 1 && this.queueIndex < this.queue.length - 1) {
+        this.nextTrack();
+      } else if (this.queue.length > 1 && this.queueIndex >= this.queue.length - 1) {
+        // Loop back to beginning of playlist queue
+        this.queueIndex = 0;
+        this.playTrack(this.queue[0]);
+      } else {
+        this.playRandomSurah();
+      }
+    } else {
+      // Repeat off: advance if more tracks remain in active queue
+      if (this.queue.length > 1 && this.queueIndex < this.queue.length - 1) {
+        this.nextTrack();
+      }
     }
   }
 
@@ -359,6 +465,12 @@ class TVQuranPlayer {
 
     if (this.fsProgressFill) this.fsProgressFill.style.width = `${progress}%`;
     if (this.fsCurrentTime) this.fsCurrentTime.textContent = this.formatTime(this.audio.currentTime);
+
+    // Save progress periodically for long audio (Tafseer lectures or Surahs)
+    if (this.audio.currentTime > 15 && this.audio.duration > 180 && Date.now() - this.progressSaveThrottle > 4000) {
+      this.progressSaveThrottle = Date.now();
+      this.saveTrackProgress();
+    }
   }
 
   onProgress() {
@@ -506,21 +618,47 @@ class TVQuranPlayer {
     }
   }
 
-  // Audio Waveform Canvas Animation
+  // Audio Waveform Canvas Animation (Optimized: No 60fps layout thrashing)
   initVisualizer() {
-    const draw = () => {
+    const resizeCanvases = () => {
+      if (this.canvas) {
+        this.canvas.width = this.canvas.offsetWidth || 140;
+        this.canvas.height = this.canvas.offsetHeight || 24;
+      }
+      if (this.fsCanvas) {
+        this.fsCanvas.width = this.fsCanvas.offsetWidth || 320;
+        this.fsCanvas.height = this.fsCanvas.offsetHeight || 60;
+      }
+    };
+
+    // Initial sizing and resize listener
+    resizeCanvases();
+    window.addEventListener('resize', resizeCanvases);
+
+    let lastDrawTime = 0;
+    const draw = (timestamp) => {
       requestAnimationFrame(draw);
+      // If paused, throttle animation to save battery
+      if (!this.isPlaying) {
+        if (timestamp - lastDrawTime > 300) {
+          lastDrawTime = timestamp;
+          this.renderCanvasBars(this.canvas);
+          this.renderCanvasBars(this.fsCanvas);
+        }
+        return;
+      }
+      lastDrawTime = timestamp;
       this.renderCanvasBars(this.canvas);
       this.renderCanvasBars(this.fsCanvas);
     };
-    draw();
+    requestAnimationFrame(draw);
   }
 
   renderCanvasBars(canvas) {
-    if (!canvas) return;
+    if (!canvas || !canvas.width || !canvas.height) return;
     const ctx = canvas.getContext('2d');
-    const w = canvas.width = canvas.offsetWidth || 140;
-    const h = canvas.height = canvas.offsetHeight || 24;
+    const w = canvas.width;
+    const h = canvas.height;
     ctx.clearRect(0, 0, w, h);
 
     const barCount = 18;
@@ -545,6 +683,88 @@ class TVQuranPlayer {
       ctx.beginPath();
       ctx.roundRect(x, y, barWidth, barHeight, [2, 2, 0, 0]);
       ctx.fill();
+    }
+  }
+
+  // Queue Management Methods
+  addToQueue(track) {
+    if (!track) return;
+    track.url = track.url || track.audio_url;
+    this.queue.push(track);
+    if (window.tvquranApp && typeof window.tvquranApp.showToast === 'function') {
+      window.tvquranApp.showToast(`${this.t('added_to_queue')}: ${this.localizedTrackValue(track, 'title')}`, 'success');
+    }
+    this.renderQueueDrawer();
+  }
+
+  removeFromQueue(index, event) {
+    if (event) event.stopPropagation();
+    if (index < 0 || index >= this.queue.length) return;
+    if (index === this.queueIndex && this.queue.length > 1) {
+      this.nextTrack();
+    }
+    this.queue.splice(index, 1);
+    if (this.queueIndex >= this.queue.length) {
+      this.queueIndex = Math.max(0, this.queue.length - 1);
+    }
+    this.renderQueueDrawer();
+  }
+
+  clearQueue() {
+    if (this.currentTrack) {
+      this.queue = [this.currentTrack];
+      this.queueIndex = 0;
+    } else {
+      this.queue = [];
+      this.queueIndex = 0;
+    }
+    this.renderQueueDrawer();
+    if (window.tvquranApp && typeof window.tvquranApp.showToast === 'function') {
+      window.tvquranApp.showToast(this.t('clear_queue'), 'info');
+    }
+  }
+
+  toggleQueueDrawer() {
+    if (!this.queueDrawer) this.queueDrawer = document.getElementById('queueDrawer');
+    if (!this.queueDrawer) return;
+    const isActive = this.queueDrawer.classList.toggle('active');
+    if (isActive) this.renderQueueDrawer();
+  }
+
+  renderQueueDrawer() {
+    if (!this.queueListEl) this.queueListEl = document.getElementById('queueItemsList');
+    if (!this.queueListEl) return;
+    if (this.queue.length === 0) {
+      this.queueListEl.innerHTML = `<div style="text-align:center; padding:2.5rem 1rem; color:var(--text-muted); font-size:0.9rem;">${this.t('queue_empty')}</div>`;
+      return;
+    }
+    this.queueListEl.innerHTML = this.queue.map((t, idx) => {
+      const isCurrent = idx === this.queueIndex;
+      const title = this.localizedTrackValue(t, 'title');
+      const subtitle = this.localizedTrackValue(t, 'reciter');
+      return `
+        <div class="queue-item ${isCurrent ? 'current' : ''}" onclick="window.tvquranPlayer.playQueueIndex(${idx})">
+          <img src="${t.cover || 'favicon.svg'}" class="queue-item-thumb" alt="Thumb">
+          <div class="queue-item-meta">
+            <div class="queue-item-title">
+              ${title}
+              ${isCurrent ? '<i class="fa fa-volume-up" style="color:var(--accent-emerald); margin-inline-start:6px;"></i>' : ''}
+            </div>
+            <div class="queue-item-subtitle">${subtitle}</div>
+          </div>
+          <button class="queue-item-remove" onclick="window.tvquranPlayer.removeFromQueue(${idx}, event)" title="${this.t('close')}">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  playQueueIndex(index) {
+    if (index >= 0 && index < this.queue.length) {
+      this.queueIndex = index;
+      this.playTrack(this.queue[index]);
+      this.renderQueueDrawer();
     }
   }
 

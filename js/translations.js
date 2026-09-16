@@ -54,7 +54,16 @@ const EN_TRANSLATIONS = {
   modal_timer_title: "Set Sleep Timer", modal_reciter_title: "Reciter Recitations",
   modal_support_title: "Support the NQuran Platform", surah_prefix: "Surah",
   full_audio: "Play Full Audio", full_audio_available: "Full audio recitation is available for this surah.",
-  total_verses_label: "Total Verses", revelation: "Revelation"
+  total_verses_label: "Total Verses", revelation: "Revelation",
+  queue_title: "Up Next Queue", clear_queue: "Clear Queue", add_to_queue: "Add to Queue",
+  added_to_queue: "Added to queue", queue_empty: "Queue is empty",
+  resume_toast: "Resumed from", restart_track: "Restart from beginning",
+  cdn_fallback_toast: "Switching to backup audio mirror...",
+  courses_title: "NurulQuran Academy & Programs",
+  courses_subtitle: "Explore structured Quranic learning, Tajweed, and Taleem-ul-Quran diplomas at nq-international.com",
+  course_taleem: "Taleem-ul-Quran Diploma", course_tajweed: "Tajweed & Makharij Mastery",
+  course_arabic: "Quranic Arabic & Grammar", course_webinars: "Tafseer & Hadith Classes",
+  enroll_now: "Course Details & Registration", loading_ayahs: "Loading verses..."
 };
 
 const TRANSLATIONS = {
@@ -106,7 +115,16 @@ const TRANSLATIONS = {
     modal_timer_title: "نیند کا ٹائمر مقرر کریں", modal_reciter_title: "قاری کی تلاوتیں",
     modal_support_title: "NQuran پلیٹ فارم کی مدد کریں", surah_prefix: "",
     full_audio: "مکمل تلاوت چلائیں", full_audio_available: "اس کی مکمل صوتی تلاوت دستیاب ہے۔",
-    total_verses_label: "کل آیات", revelation: "نزول"
+    total_verses_label: "کل آیات", revelation: "نزول",
+    queue_title: "اگلی تلاوتیں (قطار)", clear_queue: "فہرست صاف کریں", add_to_queue: "قطار میں شامل کریں",
+    added_to_queue: "قطار میں شامل کر دیا گیا", queue_empty: "قطار خالی ہے",
+    resume_toast: "سے دوبارہ شروع ہوا", restart_track: "شروع سے چلائیں",
+    cdn_fallback_toast: "متبادل سرور پر منتقل کیا جا رہا ہے...",
+    courses_title: "اکیڈمی اور کورسز (نور القرآن)",
+    courses_subtitle: "نور القرآن انٹرنیشنل کے تحت باقاعدہ قرآنی تدریس، تجوید، اور فہمِ دین کے کورسز (nq-international.com)",
+    course_taleem: "تعلیم القرآن ڈپلومہ", course_tajweed: "تجوید القرآن اور مخارج",
+    course_arabic: "عربی زبان و فہمِ قرآن", course_webinars: "دروسِ حدیث و تفسیر",
+    enroll_now: "تفصیلات و رجسٹریشن", loading_ayahs: "آیات لوڈ ہو رہی ہیں..."
   },
   fr: {
     ...EN_TRANSLATIONS,
