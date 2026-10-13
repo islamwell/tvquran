@@ -39,6 +39,22 @@ class TVQuranPlayer {
     }
   }
 
+  safeSetItem(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.warn(`LocalStorage write skipped (${key}):`, e);
+    }
+  }
+
+  safeRemoveItem(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.warn(`LocalStorage remove skipped (${key}):`, e);
+    }
+  }
+
   localizedTrackValue(track, field) {
     if (window.tvquranApp) return window.tvquranApp.content(track, field);
     return track[`${field}_en`] || track[`${field}_ur`] || track[`${field}_ar`] || '';
@@ -259,16 +275,21 @@ class TVQuranPlayer {
     if (!this.currentTrack || !this.audio.duration || isNaN(this.audio.duration)) return;
     const key = this.getTrackProgressKey(this.currentTrack);
     if (this.audio.currentTime > 15 && this.audio.currentTime < this.audio.duration - 20) {
-      localStorage.setItem(key, Math.floor(this.audio.currentTime).toString());
+      this.safeSetItem(key, Math.floor(this.audio.currentTime).toString());
     } else if (this.audio.currentTime >= this.audio.duration - 20) {
-      localStorage.removeItem(key);
+      this.safeRemoveItem(key);
     }
   }
 
   checkAndResumeTrackProgress(track) {
     if (!track) return;
     const key = this.getTrackProgressKey(track);
-    const savedSecs = parseInt(localStorage.getItem(key) || '0', 10);
+    let savedSecs = 0;
+    try {
+      savedSecs = parseInt(localStorage.getItem(key) || '0', 10);
+    } catch (e) {
+      savedSecs = 0;
+    }
     if (savedSecs > 15) {
       const formatted = this.formatTime(savedSecs);
       this.audio.currentTime = savedSecs;
@@ -281,7 +302,7 @@ class TVQuranPlayer {
             label: this.t('restart_track'),
             onClick: () => {
               this.audio.currentTime = 0;
-              localStorage.removeItem(key);
+              this.safeRemoveItem(key);
             }
           }
         );
@@ -385,7 +406,7 @@ class TVQuranPlayer {
 
   onEnded() {
     if (this.currentTrack) {
-      localStorage.removeItem(this.getTrackProgressKey(this.currentTrack));
+      this.safeRemoveItem(this.getTrackProgressKey(this.currentTrack));
     }
     if (this.repeatMode === 'one') {
       this.audio.currentTime = 0;
@@ -559,7 +580,7 @@ class TVQuranPlayer {
         window.tvquranApp.showToast(this.t('favorite_added'));
       }
     }
-    localStorage.setItem('tvquran_favorites', JSON.stringify(this.favorites));
+    this.safeSetItem('tvquran_favorites', JSON.stringify(this.favorites));
     
     if (this.currentTrack && (this.currentTrack.id === track.id || (this.currentTrack.url || this.currentTrack.audio_url) === trackUrl)) {
       this.checkIsFavorite(this.currentTrack);
@@ -596,7 +617,7 @@ class TVQuranPlayer {
     this.history = this.history.filter(h => (h.url || h.audio_url) !== trackUrl && (track.id ? h.id !== track.id : true));
     this.history.unshift({ ...track, url: trackUrl, playedAt: new Date().toISOString() });
     if (this.history.length > 50) this.history.pop();
-    localStorage.setItem('tvquran_history', JSON.stringify(this.history));
+    this.safeSetItem('tvquran_history', JSON.stringify(this.history));
   }
 
   // MediaSession API

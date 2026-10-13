@@ -3,10 +3,11 @@
  * Version: 1.1.3
  */
 
-const CACHE_NAME = 'nquran-cache-v1.1.3';
+const CACHE_NAME = 'nquran-cache-v1.1.4';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
+  '/embed',
   '/embed.html',
   '/css/style.css',
   '/css/player.css',
@@ -66,17 +67,20 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static shell: Cache first, fallback to network
+  // Static shell: Cache first, fallback to network with clean URL normalization
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Fetch in background to revalidate cache
         fetch(event.request).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
           }
         }).catch(() => {});
         return cachedResponse;
+      }
+      // If /embed requested without .html, check if /embed.html is in cache
+      if (url.pathname === '/embed') {
+        return caches.match('/embed.html').then((embedCached) => embedCached || fetch(event.request));
       }
       return fetch(event.request);
     })

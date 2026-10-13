@@ -2,14 +2,31 @@
  * tvQuran.com Main Application Controller
  */
 
+function safeGetItem(key, fallback = null) {
+  try {
+    return localStorage.getItem(key) ?? fallback;
+  } catch (e) {
+    console.warn(`LocalStorage read unavailable for ${key}:`, e);
+    return fallback;
+  }
+}
+
+function safeSetItem(key, val) {
+  try {
+    localStorage.setItem(key, val);
+  } catch (e) {
+    console.warn(`LocalStorage write unavailable for ${key}:`, e);
+  }
+}
+
 class TVQuranApp {
   constructor() {
     this.supportedLanguages = ['en', 'ur', 'fr', 'no'];
-    const savedLanguage = localStorage.getItem('tvquran_lang');
+    const savedLanguage = safeGetItem('tvquran_lang');
     // Migrate visitors who previously selected the retired Arabic interface.
     this.currentLanguage = savedLanguage === 'ar' ? 'ur' : (savedLanguage || 'en');
     if (!this.supportedLanguages.includes(this.currentLanguage)) this.currentLanguage = 'en';
-    this.currentTheme = localStorage.getItem('tvquran_theme') || 'dark';
+    this.currentTheme = safeGetItem('tvquran_theme', 'dark') || 'dark';
     this.currentReciterId = 'idris-abkar';
     this.currentView = 'home';
     this.currentCollectionCategory = 'all';
@@ -88,6 +105,7 @@ class TVQuranApp {
     this.renderAllViews();
     this.renderCoursesGrid();
     this.mushaf.init();
+    this.switchView(this.currentView, false);
 
     // Register Service Worker for PWA & Offline Support
     if ('serviceWorker' in navigator && (window.location.protocol.startsWith('http') || window.location.protocol.startsWith('https'))) {
@@ -228,7 +246,7 @@ class TVQuranApp {
   applyLanguage(lang) {
     if (!this.supportedLanguages.includes(lang)) lang = 'en';
     this.currentLanguage = lang;
-    localStorage.setItem('tvquran_lang', lang);
+    safeSetItem('tvquran_lang', lang);
     document.documentElement.lang = lang;
     const direction = lang === 'ur' ? 'rtl' : 'ltr';
     document.documentElement.dir = direction;
@@ -301,7 +319,7 @@ class TVQuranApp {
   // Theme Management
   applyTheme(theme) {
     this.currentTheme = theme;
-    localStorage.setItem('tvquran_theme', theme);
+    safeSetItem('tvquran_theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
     
     const themeIcon = document.getElementById('themeIcon');
@@ -329,7 +347,7 @@ class TVQuranApp {
     });
   }
 
-  switchView(viewId) {
+  switchView(viewId, shouldScroll = true) {
     this.currentView = viewId;
     
     // Update active tab buttons
@@ -345,7 +363,9 @@ class TVQuranApp {
     const targetSection = document.getElementById(`view-${viewId}`);
     if (targetSection) {
       targetSection.classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (shouldScroll) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
 
     if (viewId === 'favorites') {
@@ -372,7 +392,7 @@ class TVQuranApp {
     container.innerHTML = topReciters.map(r => `
       <div class="reciter-card" onclick="window.tvquranApp.openReciterProfile('${r.id}')">
         <div class="reciter-card-top">
-          <img src="${r.avatar}" alt="${this.reciterName(r)}" class="reciter-avatar" loading="lazy">
+          <img src="${r.avatar}" alt="${this.reciterName(r)}" class="reciter-avatar" loading="lazy" onerror="this.onerror=null;this.src='favicon.svg';">
           <div class="reciter-info">
             <h4>${this.reciterName(r)}</h4>
             <span class="reciter-riwayah">${this.reciterRiwayah(r)}</span>
@@ -436,7 +456,7 @@ class TVQuranApp {
     container.innerHTML = reciters.map(r => `
       <div class="reciter-card" onclick="window.tvquranApp.openReciterProfile('${r.id}')">
         <div class="reciter-card-top">
-          <img src="${r.avatar}" alt="${this.reciterName(r)}" class="reciter-avatar" loading="lazy">
+          <img src="${r.avatar}" alt="${this.reciterName(r)}" class="reciter-avatar" loading="lazy" onerror="this.onerror=null;this.src='favicon.svg';">
           <div class="reciter-info">
             <h4>${this.reciterName(r)}</h4>
             <span class="reciter-riwayah">${this.reciterRiwayah(r)}</span>

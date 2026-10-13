@@ -10,6 +10,16 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#059669">
 
+  <!-- Social Media & Open Graph Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="NQuran | High-Quality Quran Recitations & Urdu Tafseer">
+  <meta property="og:description" content="Listen to and download high-quality Holy Quran recitations and Urdu Tafseer lectures by Ustadha Iffat Maqbool (NurulQuran).">
+  <meta property="og:url" content="https://tvquran.pages.dev">
+  <meta property="og:image" content="https://tvquran.pages.dev/favicon.svg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="NQuran | Holy Quran & NurulQuran Lectures">
+  <meta name="twitter:description" content="Listen to world-renowned recitations and Urdu Tafseer lectures by Ustadha Iffat Maqbool.">
+
   <!-- Google Fonts: Arabic & Latin Modern Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,7 +50,7 @@
 
     <!-- Main Navigation Tabs -->
     <nav class="header-nav">
-      <button class="nav-tab-btn active" data-view-target="reciters">
+      <button class="nav-tab-btn" data-view-target="reciters">
         <i class="fa fa-microphone"></i> <span data-i18n="nav_reciters">القراء</span>
       </button>
       <button class="nav-tab-btn" data-view-target="surahs">
@@ -299,8 +309,8 @@
         <button class="pill-btn" onclick="window.tvquranApp.switchView('collections'); window.tvquranApp.renderCollectionsGrid('dhikr');">
           <i class="fa fa-sun-o"></i> <span data-i18n="cat_dhikr">الأذكار اليومية</span>
         </button>
-        <button class="pill-btn" onclick="window.tvquranApp.switchView('live')">
-          <i class="fa fa-podcast"></i> <span data-i18n="nav_live">البث المباشر</span>
+        <button class="pill-btn" onclick="window.tvquranApp.switchView('urdu')">
+          <i class="fa fa-graduation-cap"></i> <span data-i18n="nav_urdu">أردو</span>
         </button>
       </div>
 
@@ -781,7 +791,7 @@
       <!-- Version Indicator (Mandatory System Rule) -->
       <div class="footer-version-badge">
         <i class="fa fa-code-fork"></i>
-        <span>v1.1.3 (updated 2026-09-17 00:22)</span>
+        <span>v1.1.4 (updated 2026-10-13 23:55)</span>
       </div>
     </div>
   </footer>
